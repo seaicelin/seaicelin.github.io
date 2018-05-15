@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="坚持吧，少年！"><title> | 林里少年的博客</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">林里少年的博客</h1><a id="logo" href="/.">林里少年的博客</a><p class="description">温柔微风，轻拂绿叶</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title"></h1><div class="post-meta">May 15, 2018<script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> 阅读</span></span></div><div class="post-content"><p>#并发简史<br>在早期不包含操作系统的计算机中，程序都是单一的串行程序，从头至尾只能执行一个程序，并且这个程序访问这个计算机的所有资源。然而，随着技术的发展，操作系统出现了。它使得计算机程序有了进程，线程的概念，每次可以运行多个程序，并且不同的程序都在单独的进程中运行。操作系统为各个独立执行的进程分配各种资源，包括内存，文件句柄，安全证书等。不同进程之间通过系统本身的通信机制来交换数据，如：套接字，信号处理器，共享内存，信号量以及文件等。<br>操作系统支持多个程序同时执行，原因主要有：</p>
+<ol>
+<li>资源利用率。如某个程序在等待一个耗时操作完成，那么在等待的同时可以运行另外一个程序，这样可以提高资源利用率。</li>
+<li>公平性。如通过时间片的方式让程序轮流占用计算机资源，而不是由一个程序从头至尾运行完，再进行下一个。</li>
+<li>便利性。编写多个程序来计算多个任务，必要时进行通信。比只编写一个程序来计算所有任务更加容易实现。</li>
+</ol>
+<p>串行编程模型优势在于直观性和简单性，每次只做一件事直至完成，然后再做另外一件。然而很多情况下，这个串行模型并不理想。打个比方，我们想烧水泡茶然后看书，以串行的工作方式，我们必须等到水烧开了把茶泡好，才能去看书。而现实生活中，完全可以烧水的过程先去看书，然后等待水烧开在去泡茶。这也引出了计算机应用程序用，同步和异步的概念。正是这些原因，促使进程，线程的出现。</p>
+<p>线程，也被称为轻量级进程。现在大多数操作系统中，都是以线程为基本的调度单位，而不是进程。一个进程可以创建多个线程，并且这些线程会共享进程范围内的资源。所以，多个线程如果没有明确的协同机制，那么他们是独立运行的。同样，这些线程都可以访问进程的变量，如果没有明确的同步机制来协同对共享数据的访问，那么当一个线程正在使用某个变量时，另外一个线程可能同时访问这个变量，造成不可预测的结果。但是，每个线程都有各自的计数器，栈以及局部变量等。</p>
+<p>#线程的优势<br>如果使用得当，可以降低开发，维护成本，提升性能。线程还可以降低代码复杂度，使得代码更容易编写，阅读和维护。在GUI 程序中，可以提高界面的响应速度；在服务端程序中，可以提升资源利用率和吞吐率。</p>
+<ul>
+<li>发挥多核处理器的强大能力。</li>
+<li>建模的简单性。将复杂且异步的工作流分解到各个线程运行，在特定的同步位置进行交互。</li>
+<li>异步事件的简化处理。某个线程的阻塞不影响其他线程的处理。</li>
+<li>响应更灵敏的用户界面。使用特定线程来处理耗时操作，而不是放在UI主线程中处理。比如 Android App 耗时事件不能在 UI 线程处理，会影响 UI 响应的流畅度。</li>
+</ul>
+<p>#线程的风险<br>Java 对线程的使用是一把双刃剑。线程的优势我们都已经知道，前提是我们能够正确的编写出安全的并发代码。然而，由于开发人员的技术不足，并发潜在风险的不易察觉，都有可能让我们的程序达不到预期的效果。所以，我们有必要了解一下并发风险这一方面的内容。</p>
+<p>##安全性问题<br>多个线程的执行顺序，在没有同步的情况下是不可预测的，甚至产生奇怪的结果。如下面这个序列生成类，多个线程同时获取到的值可能是相同的。</p>
+<pre><code>public class UnsafeSequene{
+    private int value;
+    //返回一个唯一的数值
+    public int getNext(){
+        return value++;
+    }
+}
+</code></pre><p>递增操作 value++，实际上他包含三个独立的操作：</p>
+<ol>
+<li>读取 value 的值</li>
+<li>将 value 加 1</li>
+<li>将计算结果写入 value<br>由于多个线程之间的操作交替执行，所以可能发生两个线程读到相同的值。如下图所示的 A 线程和 B 线程：<br><img src="https://img-blog.csdn.net/20180515194751171?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br>上图说明的是一种常见的并发安全问题，称为竞态条件（Race Condition）。由于多个线程共享相同的内存地址空间，并且是并发运行，因此可能会访问或修改其他线程正在使用的变量。这种方式比其他线程间通信机制更容易实现数据共享，但他同样也带来了巨大的风险：线程由于无法预料数据的变化而发生错误。</li>
+</ol>
+<p>幸运的是，Java 提供了各种同步机制来协同这种访问。上面的示例代码，把它改成一个同步方法，就可以防止这种错误的发生。</p>
+<pre><code>public class UnsafeSequene{
+    private int value;
+    //返回一个唯一的数值
+    public synchronized int getNext(){
+        return value++;
+    }
+}
+</code></pre><p>##活跃性问题<br>安全性的含义是，永远不发生糟糕的事情。活跃性是，某件正确的事情最终会发生。当某个操作无法继续执行下去时，就会发生活跃性问题，比如程序代码进入死循环。所线程导致的死锁，也是活跃性问题，比如线程 A 在等待线程 B 释放其持有的资源，而线程 B 永远都不释放改资源，那么，线程 A 就会永远的等待下去。</p>
+<p>##性能问题<br>活跃性意味着某件正确的事情最终会发生，但却不够好。这就是性能问题，因为我们通常希望正确的事尽快发生。性能问题包括：服务时间过长，响应不灵敏，吞吐率过低，资源消耗过高等。</p>
+<p>良好的并发程序，线程能提高性能，但无论如何，总会带来某种程度的运行时开销。<br>1.线程调度临时挂起活跃线程并转而运行另一个线程时，就会频繁的出现上下文切换，带来极大的开销：保存和恢复执行上下文，CPU 时间更多的花在线程调度而不是线程运行上。<br>2.使用同步机制，往往会抑制某些编译器优化。</p>
+<p>#线程无处不在</p>
+<p>即使在程序中没有显示的创建线程，但在框架中仍可能会创建线程，因此在这些线程中调用的代码同样必须是线程安全的。框架通过在框架线程中调用应用程序代码将并发性引入到程序中。在代码中将不可避免地访问应用程序状态，因此所有访问这些状态的代码路径都必须是线程安全的。</p>
+<p>下面给出的模块都将在应用程序之外的线程中调用应用程序的代码。</p>
+<ol>
+<li>Timer</li>
+<li>Servlet 和 JavaServer Page</li>
+<li>远程调用方法</li>
+<li>Swing 和 AWT</li>
+</ol>
+<blockquote>
+<p>本文原创首发于微信公众号 [ 林里少年 ]，欢迎关注第一时间获取更新。</p>
+<p><img src="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+</blockquote>
+</div><div class="tags"></div><div class="post-nav"><a class="next" href="/2017/12/19/title/">title</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="https://seaicelin.github.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/05/15/[Java并发编程实战] 简介/">[Java并发编程实战] 简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/19/title/">title</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/19/字典树/">字典树</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://blog.csdn.net/amd123456789" title="csdn博客" target="_blank">csdn博客</a><ul></ul><a href="https://weibo.com/seaicelin" title="我的微博" target="_blank">我的微博</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2018 <a href="/." rel="nofollow">林里少年的博客.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.2.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
