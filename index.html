@@ -300,7 +300,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/02/并发编程/">
+    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/02/Java并发编程实战-线程安全/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="seaicelin">
@@ -319,8 +319,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/02/并发编程/" itemprop="url">
-                  并发编程
+                <a class="post-title-link" href="/2018/06/02/Java并发编程实战-线程安全/" itemprop="url">
+                  [Java并发编程实战]线程安全
                 </a>
               
             
@@ -346,9 +346,13 @@
                 
               
 
-              <time title="创建时间：2018-06-02 17:21:35" itemprop="dateCreated datePublished" datetime="2018-06-02T17:21:35+08:00">2018-06-02</time>
+              <time title="创建时间：2018-06-02 18:04:50 / 修改时间：18:05:38" itemprop="dateCreated datePublished" datetime="2018-06-02T18:04:50+08:00">2018-06-02</time>
             
 
+            
+              
+
+              
             
           </span>
 
@@ -360,7 +364,7 @@
 
           
           
-             <span id="/2018/06/02/并发编程/" class="leancloud_visitors" data-flag-title="并发编程">
+             <span id="/2018/06/02/Java并发编程实战-线程安全/" class="leancloud_visitors" data-flag-title="[Java并发编程实战]线程安全">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -393,12 +397,12 @@
       
         
           
-          
-          
+          本文介绍线程安全性相关的概念，包括原子性，竞态条件，复合操作，内置锁等，通过这些术语的介绍逐步铺开线程安全的相关知识，了解在哪些情况下应当用内置锁，哪些情况下用线程安全类就足够了。同时，说明应过多的同
+          ...
           <!--noindex-->
 
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/02/并发编程/" rel="contents">
+            <a class="btn" href="/2018/06/02/Java并发编程实战-线程安全/" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -455,7 +459,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/05/23/Java 并发编程实战 线程安全中的对象组合模式(含代码)/">
+    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/02/Java并发编程实战-简介/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="seaicelin">
@@ -474,8 +478,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/23/Java 并发编程实战 线程安全中的对象组合模式(含代码)/" itemprop="url">
-                  未命名
+                <a class="post-title-link" href="/2018/06/02/Java并发编程实战-简介/" itemprop="url">
+                  [Java并发编程实战]简介
                 </a>
               
             
@@ -501,7 +505,7 @@
                 
               
 
-              <time title="创建时间：2018-05-23 20:04:42 / 修改时间：20:54:38" itemprop="dateCreated datePublished" datetime="2018-05-23T20:04:42+08:00">2018-05-23</time>
+              <time title="创建时间：2018-06-02 18:03:55 / 修改时间：18:04:38" itemprop="dateCreated datePublished" datetime="2018-06-02T18:03:55+08:00">2018-06-02</time>
             
 
             
@@ -519,7 +523,7 @@
 
           
           
-             <span id="/2018/05/23/Java 并发编程实战 线程安全中的对象组合模式(含代码)/" class="leancloud_visitors" data-flag-title="">
+             <span id="/2018/06/02/Java并发编程实战-简介/" class="leancloud_visitors" data-flag-title="[Java并发编程实战]简介">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -552,170 +556,12 @@
       
         
           
-          
-发奋忘食，乐以忘优，不知老之将至。———《论语》
-
-前面几篇已经介绍了关于线程安全和同步的相关知识，那么有了这些概念，我们就可以开始着手设计线程安全的类。本文将介绍构建线程安全类的几个方法，并说明他
+          并发简史在早期不包含操作系统的计算机中，程序都是单一的串行程序，从头至尾只能执行一个程序，并且这个程序访问这个计算机的所有资源。然而，随着技术的发展，操作系统出现了。它使得计算机程序有了进程，线程的概
           ...
           <!--noindex-->
 
           <div class="post-button text-center">
-            <a class="btn" href="/2018/05/23/Java 并发编程实战 线程安全中的对象组合模式(含代码)/" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/05/15/Java并发编程实战 简介/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="seaicelin">
-      <meta itemprop="description" content="坚持吧，少年！用心做好每件事~">
-      <meta itemprop="image" content="/images/touxiang.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="seaicelin">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/15/Java并发编程实战 简介/" itemprop="url">
-                  未命名
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-05-15 23:19:47" itemprop="dateCreated datePublished" datetime="2018-05-15T23:19:47+08:00">2018-05-15</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/05/15/Java并发编程实战 简介/" class="leancloud_visitors" data-flag-title="">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数：</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          #并发简史在早期不包含操作系统的计算机中，程序都是单一的串行程序，从头至尾只能执行一个程序，并且这个程序访问这个计算机的所有资源。然而，随着技术的发展，操作系统出现了。它使得计算机程序有了进程，线程的
-          ...
-          <!--noindex-->
-
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/15/Java并发编程实战 简介/" rel="contents">
+            <a class="btn" href="/2018/06/02/Java并发编程实战-简介/" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -976,7 +822,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

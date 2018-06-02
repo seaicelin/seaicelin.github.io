@@ -108,27 +108,26 @@
 
 
 
-  <meta name="description" content="字典树，它跟我们查字典的步骤类似，打个比方，我们在查字典的时候会首先查第一个字母，然后在继续寻找第二个字母，以此类推直到找到对应的单词。 这个过程和用于字符匹配的字典树一样，假如我们在字典树第二层已经找不到第一个字母了（第一层为Root, 不用于表示字符），那么表示这个单词根本不存在字典树里；假设第一个字母找到了，那么继续在下一层寻找下一个字符，依次往下层匹配字符，直到匹配到叶子节点或者不存在。它">
+  <meta name="description" content="本文介绍线程安全性相关的概念，包括原子性，竞态条件，复合操作，内置锁等，通过这些术语的介绍逐步铺开线程安全的相关知识，了解在哪些情况下应当用内置锁，哪些情况下用线程安全类就足够了。同时，说明应过多的同步会引起程序的活跃度和性能问题。 对于要编写线程安全的代码，核心在于对状态的访问操作进行管理，特别是对共享的和可变的状态的访问。 共享，表示可以由多个线程同时访问；可变，表示变量的值在其生命周期内可以">
 <meta property="og:type" content="article">
-<meta property="og:title" content="字典树">
-<meta property="og:url" content="https://seaicelin.github.io/2017/12/19/字典树/index.html">
+<meta property="og:title" content="[Java并发编程实战]线程安全">
+<meta property="og:url" content="https://seaicelin.github.io/2018/06/02/Java并发编程实战-线程安全/index.html">
 <meta property="og:site_name" content="seaicelin">
-<meta property="og:description" content="字典树，它跟我们查字典的步骤类似，打个比方，我们在查字典的时候会首先查第一个字母，然后在继续寻找第二个字母，以此类推直到找到对应的单词。 这个过程和用于字符匹配的字典树一样，假如我们在字典树第二层已经找不到第一个字母了（第一层为Root, 不用于表示字符），那么表示这个单词根本不存在字典树里；假设第一个字母找到了，那么继续在下一层寻找下一个字符，依次往下层匹配字符，直到匹配到叶子节点或者不存在。它">
+<meta property="og:description" content="本文介绍线程安全性相关的概念，包括原子性，竞态条件，复合操作，内置锁等，通过这些术语的介绍逐步铺开线程安全的相关知识，了解在哪些情况下应当用内置锁，哪些情况下用线程安全类就足够了。同时，说明应过多的同步会引起程序的活跃度和性能问题。 对于要编写线程安全的代码，核心在于对状态的访问操作进行管理，特别是对共享的和可变的状态的访问。 共享，表示可以由多个线程同时访问；可变，表示变量的值在其生命周期内可以">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://img.blog.csdn.net/20171025233856747?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171026213538057?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-12-21T17:49:37.000Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-06-02T10:05:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="字典树">
-<meta name="twitter:description" content="字典树，它跟我们查字典的步骤类似，打个比方，我们在查字典的时候会首先查第一个字母，然后在继续寻找第二个字母，以此类推直到找到对应的单词。 这个过程和用于字符匹配的字典树一样，假如我们在字典树第二层已经找不到第一个字母了（第一层为Root, 不用于表示字符），那么表示这个单词根本不存在字典树里；假设第一个字母找到了，那么继续在下一层寻找下一个字符，依次往下层匹配字符，直到匹配到叶子节点或者不存在。它">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171025233856747?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:title" content="[Java并发编程实战]线程安全">
+<meta name="twitter:description" content="本文介绍线程安全性相关的概念，包括原子性，竞态条件，复合操作，内置锁等，通过这些术语的介绍逐步铺开线程安全的相关知识，了解在哪些情况下应当用内置锁，哪些情况下用线程安全类就足够了。同时，说明应过多的同步会引起程序的活跃度和性能问题。 对于要编写线程安全的代码，核心在于对状态的访问操作进行管理，特别是对共享的和可变的状态的访问。 共享，表示可以由多个线程同时访问；可变，表示变量的值在其生命周期内可以">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 
 
 
 
 
 
-  <link rel="canonical" href="https://seaicelin.github.io/2017/12/19/字典树/"/>
+  <link rel="canonical" href="https://seaicelin.github.io/2018/06/02/Java并发编程实战-线程安全/"/>
 
 
 
@@ -138,7 +137,7 @@
   };
 </script>
 
-  <title>字典树 | seaicelin</title>
+  <title>[Java并发编程实战]线程安全 | seaicelin</title>
   
 
 
@@ -303,7 +302,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2017/12/19/字典树/">
+    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/02/Java并发编程实战-线程安全/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="seaicelin">
@@ -320,7 +319,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">字典树
+          <h1 class="post-title" itemprop="name headline">[Java并发编程实战]线程安全
               
             
           </h1>
@@ -345,24 +344,12 @@
                 
               
 
-              <time title="创建时间：2017-12-19 23:27:42" itemprop="dateCreated datePublished" datetime="2017-12-19T23:27:42+08:00">2017-12-19</time>
+              <time title="创建时间：2018-06-02 18:04:50 / 修改时间：18:05:38" itemprop="dateCreated datePublished" datetime="2018-06-02T18:04:50+08:00">2018-06-02</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2017-12-22 01:49:37" itemprop="dateModified" datetime="2017-12-22T01:49:37+08:00">2017-12-22</time>
               
             
           </span>
@@ -375,7 +362,7 @@
 
           
           
-             <span id="/2017/12/19/字典树/" class="leancloud_visitors" data-flag-title="字典树">
+             <span id="/2018/06/02/Java并发编程实战-线程安全/" class="leancloud_visitors" data-flag-title="[Java并发编程实战]线程安全">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -406,33 +393,98 @@
       
 
       
-        <p>字典树，它跟我们查字典的步骤类似，打个比方，我们在查字典的时候会首先查第一个字母，然后在继续寻找第二个字母，以此类推直到找到对应的单词。</p>
-<p>这个过程和用于字符匹配的字典树一样，假如我们在字典树第二层已经找不到第一个字母了（第一层为Root, 不用于表示字符），那么表示这个单词根本不存在字典树里；假设第一个字母找到了，那么继续在下一层寻找下一个字符，依次往下层匹配字符，直到匹配到叶子节点或者不存在。它是树形结构，如下图所示：</p>
-<p><img src="http://img.blog.csdn.net/20171025233856747?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-<h2 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h2><p>以空间换时间，利用字符串的公共前缀来降低时间开销，最大限度的减少无谓的字符串比较。</p>
-<p>字典树不仅可以用来存储字符，也可以用来存储数字。</p>
-<h2 id="基本性质"><a href="#基本性质" class="headerlink" title="基本性质"></a>基本性质</h2><ul>
-<li>根节点不包含字符，除根节点以外的每个节点只表示一个字符。</li>
-<li>从根节点到某一节点，此路径上经过的节点连接起来，为该节点对应的字符串。</li>
-<li>每个节点的所有子节点表示的字符串都不相同。</li>
-</ul>
-<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><p>先给出字典表，然后在给出单词，查找单词是否在字典中。<br>刚好碰到一个题目，要求执行上面的操作。先输入5个单词存为字典，然后查找下面的2个单词是否在字典表中，存在输出 yes, 否则输出 false.</p>
-<h3 id="题目input"><a href="#题目input" class="headerlink" title="题目input:"></a>题目input:</h3><blockquote>
-<p>5<br>you<br>me<br>love<br>have<br>colorful<br>2<br>your<br>colorful</p>
-</blockquote>
-<h3 id="output"><a href="#output" class="headerlink" title="output"></a>output</h3><blockquote>
-<p>false<br>true</p>
-</blockquote>
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ul>
-<li>先建立5个单词的字典树</li>
-<li>在字典树查找单词，通过判定节点是否存在，是否为叶子节点来确定。</li>
-</ul>
-<h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">const int SIZE = 26; //26个字母</span><br><span class="line"></span><br><span class="line">//字典树结构体</span><br><span class="line">typedef struct Node_</span><br><span class="line">&#123;</span><br><span class="line"> bool isLeaf;        //是否为叶子节点</span><br><span class="line"> Node_ *child[SIZE]; //每个字符的表示</span><br><span class="line">&#125;Node;</span><br><span class="line"></span><br><span class="line">Node tree[10000];</span><br><span class="line"></span><br><span class="line">//获取字符串长度</span><br><span class="line">int getLen(char *s)</span><br><span class="line">&#123;</span><br><span class="line">   int ret = 0;</span><br><span class="line">   while(s[ret]) ret++;</span><br><span class="line">   return ret;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//初始化tree数组，每个孩子都为空，表示当前还是空树</span><br><span class="line">void init()</span><br><span class="line">&#123;</span><br><span class="line">  for(int i = 0; i &lt; 10000; i++)</span><br><span class="line">  &#123;</span><br><span class="line">     for(int j = 0; j &lt; SIZE; j++)</span><br><span class="line">     &#123;</span><br><span class="line">         tree[i].isLeaf = false;</span><br><span class="line">         tree[i].child[j] = NULL;</span><br><span class="line">     &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line"> init();</span><br><span class="line"> </span><br><span class="line"> int num;</span><br><span class="line"> scanf(&quot;%d&quot;, &amp;num);</span><br><span class="line"> </span><br><span class="line"> int cnt = 0;</span><br><span class="line"> Node *root = &amp;tree[cnt++]; //根节点不表示字符</span><br><span class="line"> </span><br><span class="line"> char c[21];</span><br><span class="line"></span><br><span class="line"> for(int i = 0; i &lt; num; i++)</span><br><span class="line"> &#123;</span><br><span class="line">     scanf(&quot;%s&quot;, c);</span><br><span class="line">     int len = getLen(c);</span><br><span class="line">     </span><br><span class="line">     //建立字典树</span><br><span class="line">     Node* p = root;</span><br><span class="line">     for(int j = 0; j &lt; len; j++)</span><br><span class="line">     &#123;</span><br><span class="line">         int index = c[j] - &apos;a&apos;;         //表示对应的字符</span><br><span class="line">         if(p-&gt;child[index] == NULL)</span><br><span class="line">             p-&gt;child[index] = &amp;tree[cnt++]; //为字符分配地址</span><br><span class="line">         p = p-&gt;child[index];</span><br><span class="line">     &#125;</span><br><span class="line">     p-&gt;isLeaf = true;//当前节点为根节点，用于判断是否存在于字典树中</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> int T;</span><br><span class="line"> scanf(&quot;%d&quot;, &amp;T);</span><br><span class="line"> </span><br><span class="line"> for(int i = 0; i &lt; T; i++)</span><br><span class="line"> &#123;</span><br><span class="line">     scanf(&quot;%s&quot;, c);</span><br><span class="line">     int len = getLen(c);</span><br><span class="line">     </span><br><span class="line">     int count = 0;</span><br><span class="line">     int index;</span><br><span class="line">     </span><br><span class="line">     //查询字典树</span><br><span class="line">     Node* p = root;</span><br><span class="line">     while(p &amp;&amp; count &lt; len)</span><br><span class="line">     &#123;</span><br><span class="line">         index = c[count] - &apos;a&apos;;//对应字符</span><br><span class="line">         p = p-&gt;child[index];//对应的字符有分配地址，表示匹配到</span><br><span class="line">         count++;</span><br><span class="line">     &#125;</span><br><span class="line">     </span><br><span class="line"></span><br><span class="line">     if(p &amp;&amp; p-&gt;isLeaf)//节点存在并且为叶子节点，说明在字典树中存在这个单词</span><br><span class="line">         printf(&quot;#%d true&quot;, i+1);</span><br><span class="line">     else</span><br><span class="line">         printf(&quot;#%d false&quot;, i+1);</span><br><span class="line"></span><br><span class="line">     printf(&quot;\n&quot;);</span><br><span class="line"> &#125;</span><br><span class="line"> return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://zh.wikipedia.org/wiki/Trie" target="_blank" rel="noopener">维基百科 Trie</a></p>
+        <p>本文介绍线程安全性相关的概念，包括原子性，竞态条件，复合操作，内置锁等，通过这些术语的介绍逐步铺开线程安全的相关知识，了解在哪些情况下应当用内置锁，哪些情况下用线程安全类就足够了。同时，说明应过多的同步会引起程序的活跃度和性能问题。</p>
+<p>对于要编写线程安全的代码，核心在于对状态的访问操作进行管理，特别是对共享的和可变的状态的访问。</p>
+<p>共享，表示可以由多个线程同时访问；可变，表示变量的值在其生命周期内可以发生变化。</p>
+<p>Java 中的主要同步机制是关键字 synchronized,它提供了一种独占的加锁方式。当然，同步还包括 volatile 类型的变量，显示锁以及原子变量。</p>
+<h1 id="什么是线程安全性"><a href="#什么是线程安全性" class="headerlink" title="什么是线程安全性"></a>什么是线程安全性</h1><p>在线程安全性的定义中，最核心的概念就是正确性。当多个线程访问某个类时，这个类始终都能表现出正确的行为，那么就称这个类时线程安全的。无状态对象一定是线程安全的。比如下面例子，不包含任何域，也不包含任何对其他类中域的引用：</p>
+<pre><code>@TreadSafe
+public class StatelessFactorizer implements Servlet{
+    public void service(ServletRequest req, ServletResponse resp){
+        BigInteger i = extractFromRequest(req);
+        BigInteger [] factors = factor(i);
+        encodeIntoresponse(resp, factors)
+    }
+}
+</code></pre><h1 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h1><p>众所周知，原子是构成物质的基本单位，所以原子代表的意思是[不可分]。在多线程程序中原子操作是一个非常重要的概念，它常常用来实现一些同步机制。</p>
+<h4 id="竞态条件"><a href="#竞态条件" class="headerlink" title="竞态条件"></a>竞态条件</h4><p>当某个计算的正确性取决于多个线程的交替执行时序时，就会发生竞态条件。常见的竞态条件类型就是[先检查后执行]操作，即通过检查一个可能失效的结果来决定下一步的动作。比如下面例子，延迟初始化中的竞态条件：</p>
+<pre><code>@NotThreadSafe
+public class LazyInitRace{
+    private ExpensiveObject instance = null;
+
+    public ExpensiveObject getInstance(){
+        if(instance == null)
+            instance = new ExpensiveObject()
+        return instance;
+    }
+}
+</code></pre><p>假如线程 A 和 B，同时执行 getInstance() ，并都判断 instance 为空，那么就会创建出两个不同的对象，不是我们预期想要的结果，可能会产生严重的问题。当然，这种需要某种不恰当的执行时序才会产生。</p>
+<h4 id="复合操作"><a href="#复合操作" class="headerlink" title="复合操作"></a>复合操作</h4><p>对于 value++ 这种递增复合操作，即[读取-修改-写入]，必须以原子方式执行，才能确保线程安全性。如何确保是原子操作呢？一种方式是加锁，另一种是采用一个线程安全类来实现。先来看线程安全类的方式：</p>
+<pre><code>@ThreadSafe
+public class SafeSequene{
+    private final AtomicLong value = new AtomicLong(0);
+    //返回一个唯一的数值
+    public long getNext(){
+        return value.incrementAndGet();
+    }
+}
+</code></pre><p>在 java.util.concurrent.atomic 包中，包含了一些原子变量类，用于实现在数值和对象引用上的原子状态转换。通过用 AtmoicLong 来代替 long 类型的计数器，能够确保所有对计数器状态的访问都是原子的。因此也是线程安全的。</p>
+<p>在实际情况中，应尽可能地使用现有的线程安全对象来管理类的状态。与非线程安全的对象相比，判断线程安全对象的可能状态及其状态转换情况要更为容易，从而也更容易维护和验证线程安全性。</p>
+<h1 id="加锁机制"><a href="#加锁机制" class="headerlink" title="加锁机制"></a>加锁机制</h1><p>假设我们创建一个类，包含两个变量并且让其自增，目的是让两个变量的值一直相等，并通过 isEqual() 来检验。如下所示，我们理想结果是每次调用 isEqual() 都返回 true。然而，我们能够保证返回的就是 true 吗？</p>
+<pre><code>@NotThreadSafe
+public class CompareValue{
+    private final AtomicLong value1 = new AtomicLong(0);
+    private final AtomicLong value2 = new AtomicLong(0);
+    //返回连个数值是否相等
+    public boolean isEqual(){
+        return value1.incrementAndGet() == value2.incrementAndGet();
+    }
+}
+</code></pre><p>实际上，这种方式并不能保证 isEqual 一定返回 true，即使是采用了线程安全类 AtmoicLong。原因是这里涉及多个变量，各个变量是彼此独立的，我们只能保证变量各自的自增操作是原子的；不能保证两个变量同时以原子的方式一起自增。线程 A 在获取 value1 后，可能线程 B 又同时修改了 value2。导致 A 获取到的是 B 修改后的值。</p>
+<p>所以，要保持状态的一致性，就需要在单个原子操作中更新所有相关的状态变量。</p>
+<h4 id="内置锁"><a href="#内置锁" class="headerlink" title="内置锁"></a>内置锁</h4><p>Java 提供了一种内置的锁机制来支持原子性：同步代码块（Synchronized Block）。同步代码块包含两部分：一个作为锁的对象引用；一个作为有这个锁保护的代码块。如：</p>
+<pre><code>synchronized (lock) {
+    //访问或修改有锁保护的共享状态
+}
+</code></pre><p>每个 Java 对象都可以用作一个实现同步的锁，这些锁被称为内置锁（Intrinsic Lock）或监视锁（Monitor Lock）。线程进入同步代码块自动获得锁，退出同步代码块自动释放锁。</p>
+<p>Java 的内置锁是一种互斥锁，这表示最多只有一个线程能持有这种锁。当线程 A 尝试获取线程 B 持有的锁时，线程 A 必须等待或者阻塞，知道 B 释放了这个锁。</p>
+<p>这种同步机制，使得上节提到的例子，CompareValue 变得安全，能确保两个变量永远相等。线程 A 调用 isEqual() 时，线程 B 必须等待知道线程 A 调用完成释放锁。</p>
+<pre><code>@NotThreadSafe
+public class CompareValue{
+    private final AtomicLong value1 = new AtomicLong(0);
+    private final AtomicLong value2 = new AtomicLong(0);
+    //返回一个唯一的数值
+    public synchronized boolean isEqual(){
+        return value1.incrementAndGet() == value2.incrementAndGet();
+    }
+}
+</code></pre><h4 id="重入"><a href="#重入" class="headerlink" title="重入"></a>重入</h4><p>内置锁是可重入的，当某个线程试图获取一个已经有它持有的锁时，他是可以成功获取的。换句话说，重入意味着获取锁的操作粒度是[线程],而不是[调用]。</p>
+<p>重入进一步提升了加锁行为的封装性，简化了面向对象并发代码的开发。举个例子，子类改写了父类的 synchronized 方法，然后调用父类的方法，此时如果不支持可重入锁，那么这段代码将产生死锁！！</p>
+<pre><code>//如果内置锁不是可重入的，那么这段代码将发生死锁
+public class Base {
+    public synchronized void doSomething() {
+        ....
+    }
+}
+
+public class Child extends Base{
+    public synchronized void doSomething() {//重写
+        super.doSomething();//直接调用父类方法
+    }
+}
+</code></pre><h1 id="用锁来保护状态"><a href="#用锁来保护状态" class="headerlink" title="用锁来保护状态"></a>用锁来保护状态</h1><p>由于锁能使其保护的代码路径以串行的形式来访问，因此可以通过所来构造一些协议以实现对共享状态的独占访问。对于可能被多个线程同时访问的可变状态变量，在访问它时都需要持有同一个锁。在这种情况下，我们称状态变量是由这个锁来保护的。并且，每个共享和可变的状态变量应该只由一个锁来保护。</p>
+<p>一种常见的加锁约定是，将所有的可变状态都封装在对象内部，并通过对象的内置锁对所有访问可变状态的代码路径进行同步，使得在该对象上不会发生并发访问。许多线程安全类都使用这种模式，比如 Vector 和其他同步容器类。</p>
+<p>另外，如果将每个方法都声明为 sychronized,也不足以保证在 Vector 上执行的符合操作是原子的！！</p>
+<pre><code>if (!vector.contains(element))
+    vector.add(element);
+</code></pre><p>如上所示，尽管 contains 和 add 两个方法都是原子的，但是尝试[缺少-加入]操作仍然存在竞争条件。所以，把多个操作组成一个复合操作时，仍然需要额外的锁来保证线程安全性。</p>
+<h1 id="活跃度与性能"><a href="#活跃度与性能" class="headerlink" title="活跃度与性能"></a>活跃度与性能</h1><p>如上所说，如果对于所有方法，我们都声明为 sychronized,那么每次只能有一个线程去执行它，而其他所有线程都必须等待。这会导致活跃度和性能问题。</p>
+<p>解决的办法可以是，通过缩小 synchronized 块的范围，来提升并发性。同时，也要防止将一个原子操作分配到多个 synchronized 块中。</p>
+<p>决定 sychronized 块的大小需要权衡各种设计要求，包括安全性、简单性、性能。通常简单性和性能之间是互相牵制的，实现一个同步策略时，不要过早的为了性能而牺牲简单性。</p>
+<p>当使用锁时，你应该清楚块中的代码的功能，以及他的执行是否会耗时。如果长时间的占有锁，就会引起活跃度和性能风险的问题。有些耗时的操作，比如网络或控制台I/O，这些难以快速完成的任务，这期间不要占有锁。</p>
 <blockquote>
-<p>本文原创首发于微信公众号 [ 林里少年 ]，欢迎关注第一时间获取更新。 </p>
+<p>本文原创首发于微信公众号 [ 林里少年 ]，欢迎关注第一时间获取更新。<br><img src="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
 </blockquote>
-<p><img src="http://img.blog.csdn.net/20171026213538057?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
 
       
 
@@ -484,7 +536,7 @@
     <strong>本文作者： </strong>seaicelin</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://seaicelin.github.io/2017/12/19/字典树/" title="字典树">https://seaicelin.github.io/2017/12/19/字典树/</a>
+    <a href="https://seaicelin.github.io/2018/06/02/Java并发编程实战-线程安全/" title="[Java并发编程实战]线程安全">https://seaicelin.github.io/2018/06/02/Java并发编程实战-线程安全/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -504,15 +556,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/06/02/Java并发编程实战-简介/" rel="next" title="[Java并发编程实战]简介">
+                <i class="fa fa-chevron-left"></i> [Java并发编程实战]简介
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/02/Java并发编程实战-简介/" rel="prev" title="[Java并发编程实战]简介">
-                [Java并发编程实战]简介 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -654,7 +706,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心思想"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x6838;&#x5FC3;&#x601D;&#x60F3;" class="headerlink" title="&#x6838;&#x5FC3;&#x601D;&#x60F3;"></a>&#x6838;&#x5FC3;&#x601D;&#x60F3;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本性质"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x57FA;&#x672C;&#x6027;&#x8D28;" class="headerlink" title="&#x57FA;&#x672C;&#x6027;&#x8D28;"></a>&#x57FA;&#x672C;&#x6027;&#x8D28;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x5E94;&#x7528;" class="headerlink" title="&#x5E94;&#x7528;"></a>&#x5E94;&#x7528;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目input"><span class="nav-number">3.1.</span> <span class="nav-text"><a href="#&#x9898;&#x76EE;input" class="headerlink" title="&#x9898;&#x76EE;input:"></a>&#x9898;&#x76EE;input:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#output"><span class="nav-number">3.2.</span> <span class="nav-text"><a href="#output" class="headerlink" title="output"></a>output</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">3.3.</span> <span class="nav-text"><a href="#&#x601D;&#x8DEF;" class="headerlink" title="&#x601D;&#x8DEF;"></a>&#x601D;&#x8DEF;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源码"><span class="nav-number">3.4.</span> <span class="nav-text"><a href="#&#x6E90;&#x7801;" class="headerlink" title="&#x6E90;&#x7801;"></a>&#x6E90;&#x7801;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x53C2;&#x8003;" class="headerlink" title="&#x53C2;&#x8003;"></a>&#x53C2;&#x8003;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是线程安全性"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x4EC0;&#x4E48;&#x662F;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;&#x6027;" class="headerlink" title="&#x4EC0;&#x4E48;&#x662F;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;&#x6027;"></a>&#x4EC0;&#x4E48;&#x662F;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;&#x6027;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原子性"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x539F;&#x5B50;&#x6027;" class="headerlink" title="&#x539F;&#x5B50;&#x6027;"></a>&#x539F;&#x5B50;&#x6027;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#竞态条件"><span class="nav-number">2.0.0.1.</span> <span class="nav-text"><a href="#&#x7ADE;&#x6001;&#x6761;&#x4EF6;" class="headerlink" title="&#x7ADE;&#x6001;&#x6761;&#x4EF6;"></a>&#x7ADE;&#x6001;&#x6761;&#x4EF6;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#复合操作"><span class="nav-number">2.0.0.2.</span> <span class="nav-text"><a href="#&#x590D;&#x5408;&#x64CD;&#x4F5C;" class="headerlink" title="&#x590D;&#x5408;&#x64CD;&#x4F5C;"></a>&#x590D;&#x5408;&#x64CD;&#x4F5C;</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#加锁机制"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x52A0;&#x9501;&#x673A;&#x5236;" class="headerlink" title="&#x52A0;&#x9501;&#x673A;&#x5236;"></a>&#x52A0;&#x9501;&#x673A;&#x5236;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#内置锁"><span class="nav-number">3.0.0.1.</span> <span class="nav-text"><a href="#&#x5185;&#x7F6E;&#x9501;" class="headerlink" title="&#x5185;&#x7F6E;&#x9501;"></a>&#x5185;&#x7F6E;&#x9501;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重入"><span class="nav-number">3.0.0.2.</span> <span class="nav-text"><a href="#&#x91CD;&#x5165;" class="headerlink" title="&#x91CD;&#x5165;"></a>&#x91CD;&#x5165;</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用锁来保护状态"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x7528;&#x9501;&#x6765;&#x4FDD;&#x62A4;&#x72B6;&#x6001;" class="headerlink" title="&#x7528;&#x9501;&#x6765;&#x4FDD;&#x62A4;&#x72B6;&#x6001;"></a>&#x7528;&#x9501;&#x6765;&#x4FDD;&#x62A4;&#x72B6;&#x6001;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#活跃度与性能"><span class="nav-number">5.</span> <span class="nav-text"><a href="#&#x6D3B;&#x8DC3;&#x5EA6;&#x4E0E;&#x6027;&#x80FD;" class="headerlink" title="&#x6D3B;&#x8DC3;&#x5EA6;&#x4E0E;&#x6027;&#x80FD;"></a>&#x6D3B;&#x8DC3;&#x5EA6;&#x4E0E;&#x6027;&#x80FD;</span></a></li></ol></div>
             
 
           </div>
