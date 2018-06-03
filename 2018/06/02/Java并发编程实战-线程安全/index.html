@@ -127,7 +127,7 @@
 <meta property="og:description" content="本文介绍线程安全性相关的概念，包括原子性，竞态条件，复合操作，内置锁等，通过这些术语的介绍逐步铺开线程安全的相关知识，了解在哪些情况下应当用内置锁，哪些情况下用线程安全类就足够了。同时，说明应过多的同步会引起程序的活跃度和性能问题。 对于要编写线程安全的代码，核心在于对状态的访问操作进行管理，特别是对共享的和可变的状态的访问。 共享，表示可以由多个线程同时访问；可变，表示变量的值在其生命周期内可以">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-06-02T10:05:38.000Z">
+<meta property="og:updated_time" content="2018-06-03T01:17:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[Java并发编程实战]线程安全">
 <meta name="twitter:description" content="本文介绍线程安全性相关的概念，包括原子性，竞态条件，复合操作，内置锁等，通过这些术语的介绍逐步铺开线程安全的相关知识，了解在哪些情况下应当用内置锁，哪些情况下用线程安全类就足够了。同时，说明应过多的同步会引起程序的活跃度和性能问题。 对于要编写线程安全的代码，核心在于对状态的访问操作进行管理，特别是对共享的和可变的状态的访问。 共享，表示可以由多个线程同时访问；可变，表示变量的值在其生命周期内可以">
@@ -355,12 +355,24 @@
                 
               
 
-              <time title="创建时间：2018-06-02 18:04:50 / 修改时间：18:05:38" itemprop="dateCreated datePublished" datetime="2018-06-02T18:04:50+08:00">2018-06-02</time>
+              <time title="创建时间：2018-06-02 18:04:50" itemprop="dateCreated datePublished" datetime="2018-06-02T18:04:50+08:00">2018-06-02</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-06-03 09:17:20" itemprop="dateModified" datetime="2018-06-03T09:17:20+08:00">2018-06-03</time>
               
             
           </span>
@@ -418,7 +430,7 @@ public class StatelessFactorizer implements Servlet{
     }
 }
 </code></pre><h1 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h1><p>众所周知，原子是构成物质的基本单位，所以原子代表的意思是[不可分]。在多线程程序中原子操作是一个非常重要的概念，它常常用来实现一些同步机制。</p>
-<h4 id="竞态条件"><a href="#竞态条件" class="headerlink" title="竞态条件"></a>竞态条件</h4><p>当某个计算的正确性取决于多个线程的交替执行时序时，就会发生竞态条件。常见的竞态条件类型就是[先检查后执行]操作，即通过检查一个可能失效的结果来决定下一步的动作。比如下面例子，延迟初始化中的竞态条件：</p>
+<h2 id="竞态条件"><a href="#竞态条件" class="headerlink" title="竞态条件"></a>竞态条件</h2><p>当某个计算的正确性取决于多个线程的交替执行时序时，就会发生竞态条件。常见的竞态条件类型就是[先检查后执行]操作，即通过检查一个可能失效的结果来决定下一步的动作。比如下面例子，延迟初始化中的竞态条件：</p>
 <pre><code>@NotThreadSafe
 public class LazyInitRace{
     private ExpensiveObject instance = null;
@@ -430,7 +442,7 @@ public class LazyInitRace{
     }
 }
 </code></pre><p>假如线程 A 和 B，同时执行 getInstance() ，并都判断 instance 为空，那么就会创建出两个不同的对象，不是我们预期想要的结果，可能会产生严重的问题。当然，这种需要某种不恰当的执行时序才会产生。</p>
-<h4 id="复合操作"><a href="#复合操作" class="headerlink" title="复合操作"></a>复合操作</h4><p>对于 value++ 这种递增复合操作，即[读取-修改-写入]，必须以原子方式执行，才能确保线程安全性。如何确保是原子操作呢？一种方式是加锁，另一种是采用一个线程安全类来实现。先来看线程安全类的方式：</p>
+<h2 id="复合操作"><a href="#复合操作" class="headerlink" title="复合操作"></a>复合操作</h2><p>对于 value++ 这种递增复合操作，即[读取-修改-写入]，必须以原子方式执行，才能确保线程安全性。如何确保是原子操作呢？一种方式是加锁，另一种是采用一个线程安全类来实现。先来看线程安全类的方式：</p>
 <pre><code>@ThreadSafe
 public class SafeSequene{
     private final AtomicLong value = new AtomicLong(0);
@@ -453,7 +465,7 @@ public class CompareValue{
 }
 </code></pre><p>实际上，这种方式并不能保证 isEqual 一定返回 true，即使是采用了线程安全类 AtmoicLong。原因是这里涉及多个变量，各个变量是彼此独立的，我们只能保证变量各自的自增操作是原子的；不能保证两个变量同时以原子的方式一起自增。线程 A 在获取 value1 后，可能线程 B 又同时修改了 value2。导致 A 获取到的是 B 修改后的值。</p>
 <p>所以，要保持状态的一致性，就需要在单个原子操作中更新所有相关的状态变量。</p>
-<h4 id="内置锁"><a href="#内置锁" class="headerlink" title="内置锁"></a>内置锁</h4><p>Java 提供了一种内置的锁机制来支持原子性：同步代码块（Synchronized Block）。同步代码块包含两部分：一个作为锁的对象引用；一个作为有这个锁保护的代码块。如：</p>
+<h2 id="内置锁"><a href="#内置锁" class="headerlink" title="内置锁"></a>内置锁</h2><p>Java 提供了一种内置的锁机制来支持原子性：同步代码块（Synchronized Block）。同步代码块包含两部分：一个作为锁的对象引用；一个作为有这个锁保护的代码块。如：</p>
 <pre><code>synchronized (lock) {
     //访问或修改有锁保护的共享状态
 }
@@ -469,7 +481,7 @@ public class CompareValue{
         return value1.incrementAndGet() == value2.incrementAndGet();
     }
 }
-</code></pre><h4 id="重入"><a href="#重入" class="headerlink" title="重入"></a>重入</h4><p>内置锁是可重入的，当某个线程试图获取一个已经有它持有的锁时，他是可以成功获取的。换句话说，重入意味着获取锁的操作粒度是[线程],而不是[调用]。</p>
+</code></pre><h2 id="重入"><a href="#重入" class="headerlink" title="重入"></a>重入</h2><p>内置锁是可重入的，当某个线程试图获取一个已经有它持有的锁时，他是可以成功获取的。换句话说，重入意味着获取锁的操作粒度是[线程],而不是[调用]。</p>
 <p>重入进一步提升了加锁行为的封装性，简化了面向对象并发代码的开发。举个例子，子类改写了父类的 synchronized 方法，然后调用父类的方法，此时如果不支持可重入锁，那么这段代码将产生死锁！！</p>
 <pre><code>//如果内置锁不是可重入的，那么这段代码将发生死锁
 public class Base {
@@ -763,7 +775,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是线程安全性"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x4EC0;&#x4E48;&#x662F;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;&#x6027;" class="headerlink" title="&#x4EC0;&#x4E48;&#x662F;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;&#x6027;"></a>&#x4EC0;&#x4E48;&#x662F;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;&#x6027;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原子性"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x539F;&#x5B50;&#x6027;" class="headerlink" title="&#x539F;&#x5B50;&#x6027;"></a>&#x539F;&#x5B50;&#x6027;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#竞态条件"><span class="nav-number">2.0.0.1.</span> <span class="nav-text"><a href="#&#x7ADE;&#x6001;&#x6761;&#x4EF6;" class="headerlink" title="&#x7ADE;&#x6001;&#x6761;&#x4EF6;"></a>&#x7ADE;&#x6001;&#x6761;&#x4EF6;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#复合操作"><span class="nav-number">2.0.0.2.</span> <span class="nav-text"><a href="#&#x590D;&#x5408;&#x64CD;&#x4F5C;" class="headerlink" title="&#x590D;&#x5408;&#x64CD;&#x4F5C;"></a>&#x590D;&#x5408;&#x64CD;&#x4F5C;</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#加锁机制"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x52A0;&#x9501;&#x673A;&#x5236;" class="headerlink" title="&#x52A0;&#x9501;&#x673A;&#x5236;"></a>&#x52A0;&#x9501;&#x673A;&#x5236;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#内置锁"><span class="nav-number">3.0.0.1.</span> <span class="nav-text"><a href="#&#x5185;&#x7F6E;&#x9501;" class="headerlink" title="&#x5185;&#x7F6E;&#x9501;"></a>&#x5185;&#x7F6E;&#x9501;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重入"><span class="nav-number">3.0.0.2.</span> <span class="nav-text"><a href="#&#x91CD;&#x5165;" class="headerlink" title="&#x91CD;&#x5165;"></a>&#x91CD;&#x5165;</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用锁来保护状态"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x7528;&#x9501;&#x6765;&#x4FDD;&#x62A4;&#x72B6;&#x6001;" class="headerlink" title="&#x7528;&#x9501;&#x6765;&#x4FDD;&#x62A4;&#x72B6;&#x6001;"></a>&#x7528;&#x9501;&#x6765;&#x4FDD;&#x62A4;&#x72B6;&#x6001;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#活跃度与性能"><span class="nav-number">5.</span> <span class="nav-text"><a href="#&#x6D3B;&#x8DC3;&#x5EA6;&#x4E0E;&#x6027;&#x80FD;" class="headerlink" title="&#x6D3B;&#x8DC3;&#x5EA6;&#x4E0E;&#x6027;&#x80FD;"></a>&#x6D3B;&#x8DC3;&#x5EA6;&#x4E0E;&#x6027;&#x80FD;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是线程安全性"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x4EC0;&#x4E48;&#x662F;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;&#x6027;" class="headerlink" title="&#x4EC0;&#x4E48;&#x662F;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;&#x6027;"></a>&#x4EC0;&#x4E48;&#x662F;&#x7EBF;&#x7A0B;&#x5B89;&#x5168;&#x6027;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原子性"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x539F;&#x5B50;&#x6027;" class="headerlink" title="&#x539F;&#x5B50;&#x6027;"></a>&#x539F;&#x5B50;&#x6027;</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#竞态条件"><span class="nav-number">2.1.</span> <span class="nav-text"><a href="#&#x7ADE;&#x6001;&#x6761;&#x4EF6;" class="headerlink" title="&#x7ADE;&#x6001;&#x6761;&#x4EF6;"></a>&#x7ADE;&#x6001;&#x6761;&#x4EF6;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复合操作"><span class="nav-number">2.2.</span> <span class="nav-text"><a href="#&#x590D;&#x5408;&#x64CD;&#x4F5C;" class="headerlink" title="&#x590D;&#x5408;&#x64CD;&#x4F5C;"></a>&#x590D;&#x5408;&#x64CD;&#x4F5C;</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#加锁机制"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x52A0;&#x9501;&#x673A;&#x5236;" class="headerlink" title="&#x52A0;&#x9501;&#x673A;&#x5236;"></a>&#x52A0;&#x9501;&#x673A;&#x5236;</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内置锁"><span class="nav-number">3.1.</span> <span class="nav-text"><a href="#&#x5185;&#x7F6E;&#x9501;" class="headerlink" title="&#x5185;&#x7F6E;&#x9501;"></a>&#x5185;&#x7F6E;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重入"><span class="nav-number">3.2.</span> <span class="nav-text"><a href="#&#x91CD;&#x5165;" class="headerlink" title="&#x91CD;&#x5165;"></a>&#x91CD;&#x5165;</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用锁来保护状态"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x7528;&#x9501;&#x6765;&#x4FDD;&#x62A4;&#x72B6;&#x6001;" class="headerlink" title="&#x7528;&#x9501;&#x6765;&#x4FDD;&#x62A4;&#x72B6;&#x6001;"></a>&#x7528;&#x9501;&#x6765;&#x4FDD;&#x62A4;&#x72B6;&#x6001;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#活跃度与性能"><span class="nav-number">5.</span> <span class="nav-text"><a href="#&#x6D3B;&#x8DC3;&#x5EA6;&#x4E0E;&#x6027;&#x80FD;" class="headerlink" title="&#x6D3B;&#x8DC3;&#x5EA6;&#x4E0E;&#x6027;&#x80FD;"></a>&#x6D3B;&#x8DC3;&#x5EA6;&#x4E0E;&#x6027;&#x80FD;</span></a></li></ol></div>
             
 
           </div>
