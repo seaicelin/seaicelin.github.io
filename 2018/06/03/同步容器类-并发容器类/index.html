@@ -119,27 +119,28 @@
 
 
 
-  <meta name="description" content="并发简史在早期不包含操作系统的计算机中，程序都是单一的串行程序，从头至尾只能执行一个程序，并且这个程序访问这个计算机的所有资源。然而，随着技术的发展，操作系统出现了。它使得计算机程序有了进程，线程的概念，每次可以运行多个程序，并且不同的程序都在单独的进程中运行。操作系统为各个独立执行的进程分配各种资源，包括内存，文件句柄，安全证书等。不同进程之间通过系统本身的通信机制来交换数据，如：套接字，信号处">
+  <meta name="description" content="吾生也有涯，而知也无涯。———《庄子》  通过上一篇文章，我们已经知道设计一个线程安全类的原则和步骤，以及在设计过程中我们应当注意的细节。实际上，Java 的集合库包含了线程安全集合和非线程安全集合，可以说 Java 的线程安全集合库就是按照前一篇说到的实例封闭、安全性的委托、组合这几个方式来实现的。 这篇主要简单介绍 Java 集合库包含哪些常用的容器类，它们可以简单区分为:  非同步集合 同">
+<meta name="keywords" content="java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[Java并发编程实战]简介">
-<meta property="og:url" content="https://seaicelin.github.io/2018/06/02/Java并发编程实战-简介/index.html">
+<meta property="og:title" content="同步容器类,并发容器类">
+<meta property="og:url" content="https://seaicelin.github.io/2018/06/03/同步容器类-并发容器类/index.html">
 <meta property="og:site_name" content="seaicelin">
-<meta property="og:description" content="并发简史在早期不包含操作系统的计算机中，程序都是单一的串行程序，从头至尾只能执行一个程序，并且这个程序访问这个计算机的所有资源。然而，随着技术的发展，操作系统出现了。它使得计算机程序有了进程，线程的概念，每次可以运行多个程序，并且不同的程序都在单独的进程中运行。操作系统为各个独立执行的进程分配各种资源，包括内存，文件句柄，安全证书等。不同进程之间通过系统本身的通信机制来交换数据，如：套接字，信号处">
+<meta property="og:description" content="吾生也有涯，而知也无涯。———《庄子》  通过上一篇文章，我们已经知道设计一个线程安全类的原则和步骤，以及在设计过程中我们应当注意的细节。实际上，Java 的集合库包含了线程安全集合和非线程安全集合，可以说 Java 的线程安全集合库就是按照前一篇说到的实例封闭、安全性的委托、组合这几个方式来实现的。 这篇主要简单介绍 Java 集合库包含哪些常用的容器类，它们可以简单区分为:  非同步集合 同">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://img-blog.csdn.net/20180515194751171?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180525074148469?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 <meta property="og:image" content="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-06-02T10:04:38.000Z">
+<meta property="og:updated_time" content="2018-06-03T03:32:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[Java并发编程实战]简介">
-<meta name="twitter:description" content="并发简史在早期不包含操作系统的计算机中，程序都是单一的串行程序，从头至尾只能执行一个程序，并且这个程序访问这个计算机的所有资源。然而，随着技术的发展，操作系统出现了。它使得计算机程序有了进程，线程的概念，每次可以运行多个程序，并且不同的程序都在单独的进程中运行。操作系统为各个独立执行的进程分配各种资源，包括内存，文件句柄，安全证书等。不同进程之间通过系统本身的通信机制来交换数据，如：套接字，信号处">
-<meta name="twitter:image" content="https://img-blog.csdn.net/20180515194751171?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta name="twitter:title" content="同步容器类,并发容器类">
+<meta name="twitter:description" content="吾生也有涯，而知也无涯。———《庄子》  通过上一篇文章，我们已经知道设计一个线程安全类的原则和步骤，以及在设计过程中我们应当注意的细节。实际上，Java 的集合库包含了线程安全集合和非线程安全集合，可以说 Java 的线程安全集合库就是按照前一篇说到的实例封闭、安全性的委托、组合这几个方式来实现的。 这篇主要简单介绍 Java 集合库包含哪些常用的容器类，它们可以简单区分为:  非同步集合 同">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20180525074148469?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 
 
 
 
 
 
-  <link rel="canonical" href="https://seaicelin.github.io/2018/06/02/Java并发编程实战-简介/"/>
+  <link rel="canonical" href="https://seaicelin.github.io/2018/06/03/同步容器类-并发容器类/"/>
 
 
 
@@ -149,7 +150,7 @@
   };
 </script>
 
-  <title>[Java并发编程实战]简介 | seaicelin</title>
+  <title>同步容器类,并发容器类 | seaicelin</title>
   
 
 
@@ -314,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/02/Java并发编程实战-简介/">
+    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/03/同步容器类-并发容器类/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="seaicelin">
@@ -331,7 +332,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">[Java并发编程实战]简介
+          <h1 class="post-title" itemprop="name headline">同步容器类,并发容器类
               
             
           </h1>
@@ -356,7 +357,7 @@
                 
               
 
-              <time title="创建时间：2018-06-02 18:03:55 / 修改时间：18:04:38" itemprop="dateCreated datePublished" datetime="2018-06-02T18:03:55+08:00">2018-06-02</time>
+              <time title="创建时间：2018-06-03 11:19:32 / 修改时间：11:32:11" itemprop="dateCreated datePublished" datetime="2018-06-03T11:19:32+08:00">2018-06-03</time>
             
 
             
@@ -374,7 +375,7 @@
 
           
           
-             <span id="/2018/06/02/Java并发编程实战-简介/" class="leancloud_visitors" data-flag-title="[Java并发编程实战]简介">
+             <span id="/2018/06/03/同步容器类-并发容器类/" class="leancloud_visitors" data-flag-title="同步容器类,并发容器类">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -405,43 +406,73 @@
       
 
       
-        <h1 id="并发简史"><a href="#并发简史" class="headerlink" title="并发简史"></a>并发简史</h1><p>在早期不包含操作系统的计算机中，程序都是单一的串行程序，从头至尾只能执行一个程序，并且这个程序访问这个计算机的所有资源。然而，随着技术的发展，操作系统出现了。它使得计算机程序有了进程，线程的概念，每次可以运行多个程序，并且不同的程序都在单独的进程中运行。操作系统为各个独立执行的进程分配各种资源，包括内存，文件句柄，安全证书等。不同进程之间通过系统本身的通信机制来交换数据，如：套接字，信号处理器，共享内存，信号量以及文件等。<br>操作系统支持多个程序同时执行，原因主要有：</p>
-<ol>
-<li>资源利用率。如某个程序在等待一个耗时操作完成，那么在等待的同时可以运行另外一个程序，这样可以提高资源利用率。</li>
-<li>公平性。如通过时间片的方式让程序轮流占用计算机资源，而不是由一个程序从头至尾运行完，再进行下一个。</li>
-<li>便利性。编写多个程序来计算多个任务，必要时进行通信。比只编写一个程序来计算所有任务更加容易实现。</li>
-</ol>
-<p>串行编程模型优势在于直观性和简单性，每次只做一件事直至完成，然后再做另外一件。然而很多情况下，这个串行模型并不理想。打个比方，我们想烧水泡茶然后看书，以串行的工作方式，我们必须等到水烧开了把茶泡好，才能去看书。而现实生活中，完全可以烧水的过程先去看书，然后等待水烧开在去泡茶。这也引出了计算机应用程序用，同步和异步的概念。正是这些原因，促使进程，线程的出现。</p>
-<p>线程，也被称为轻量级进程。现在大多数操作系统中，都是以线程为基本的调度单位，而不是进程。一个进程可以创建多个线程，并且这些线程会共享进程范围内的资源。所以，多个线程如果没有明确的协同机制，那么他们是独立运行的。同样，这些线程都可以访问进程的变量，如果没有明确的同步机制来协同对共享数据的访问，那么当一个线程正在使用某个变量时，另外一个线程可能同时访问这个变量，造成不可预测的结果。但是，每个线程都有各自的计数器，栈以及局部变量等。</p>
-<h1 id="线程的优势"><a href="#线程的优势" class="headerlink" title="线程的优势"></a>线程的优势</h1><p>如果使用得当，可以降低开发，维护成本，提升性能。线程还可以降低代码复杂度，使得代码更容易编写，阅读和维护。在GUI 程序中，可以提高界面的响应速度；在服务端程序中，可以提升资源利用率和吞吐率。</p>
+        <blockquote>
+<p><strong>吾生也有涯，而知也无涯。———《庄子》</strong></p>
+</blockquote>
+<p>通过上一篇文章，我们已经知道设计一个线程安全类的原则和步骤，以及在设计过程中我们应当注意的细节。实际上，Java 的集合库包含了线程安全集合和非线程安全集合，可以说 Java 的线程安全集合库就是按照前一篇说到的实例封闭、安全性的委托、组合这几个方式来实现的。</p>
+<p>这篇主要简单介绍 Java 集合库包含哪些常用的容器类，它们可以简单区分为:</p>
 <ul>
-<li>发挥多核处理器的强大能力。</li>
-<li>建模的简单性。将复杂且异步的工作流分解到各个线程运行，在特定的同步位置进行交互。</li>
-<li>异步事件的简化处理。某个线程的阻塞不影响其他线程的处理。</li>
-<li>响应更灵敏的用户界面。使用特定线程来处理耗时操作，而不是放在UI主线程中处理。比如 Android App 耗时事件不能在 UI 线程处理，会影响 UI 响应的流畅度。</li>
+<li>非同步集合</li>
+<li>同步集合</li>
+<li>并发集合</li>
 </ul>
-<h1 id="线程的风险"><a href="#线程的风险" class="headerlink" title="线程的风险"></a>线程的风险</h1><p>Java 对线程的使用是一把双刃剑。线程的优势我们都已经知道，前提是我们能够正确的编写出安全的并发代码。然而，由于开发人员的技术不足，并发潜在风险的不易察觉，都有可能让我们的程序达不到预期的效果。所以，我们有必要了解一下并发风险这一方面的内容。</p>
-<h2 id="安全性问题"><a href="#安全性问题" class="headerlink" title="安全性问题"></a>安全性问题</h2><p>多个线程的执行顺序，在没有同步的情况下是不可预测的，甚至产生奇怪的结果。如下面这个序列生成类，多个线程同时获取到的值可能是相同的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnsafeSequene</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> value;</span><br><span class="line">    <span class="comment">//返回一个唯一的数值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getNext</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>递增操作 value++，实际上他包含三个独立的操作：</p>
+<p>那么，它们分别包括哪些具体的集合类，它们有什么主要的区别，以及它们的框架是怎样的？</p>
+<p>这就是今天要讲的内容，读完这篇文章你应该要知道常用的集合库有哪些具体容器类，多线程的情况下应该用哪种集合以及它们的主要区别。</p>
+<h1 id="Java-集合框架"><a href="#Java-集合框架" class="headerlink" title="Java 集合框架"></a>Java 集合框架</h1><p>Java 集合工具包在 Java.util 包下，它包含了常用的数据结构，比如数组、链表、栈、队列、集合、哈希表等等。</p>
+<p>这里先放一张 Java 集合类的框架图：<br><img src="https://img-blog.csdn.net/20180525074148469?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="Java 集合框架"></p>
+<p>Collection 接口是集合类的根接口，Java 中没有提供这个接口的直接的实现类。但是让其被继承产生了两个接口，就是 Set 和 List。Set中不能包含重复的元素。List是一个有序的集合，可以包含重复的元素，提供了按索引访问的方式。</p>
+<p>Map 是 Java.util 包中的另一个接口，它和 Collection 接口没有关系，是相互独立的，但是都属于集合类的一部分。Map 包含了 key-value 对。Map 不能包含重复的 key，但是可以包含相同的 value。</p>
+<p>其中还有一个 Iterator<e> 接口，Collection 继承了它，也就是说所有的集合类，都实现了Iterator接口，这是一个用于遍历集合中元素的接口，主要包含以下三种方法：</e></p>
 <ol>
-<li>读取 value 的值</li>
-<li>将 value 加 1</li>
-<li>将计算结果写入 value<br>由于多个线程之间的操作交替执行，所以可能发生两个线程读到相同的值。如下图所示的 A 线程和 B 线程：<br><img src="https://img-blog.csdn.net/20180515194751171?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br>上图说明的是一种常见的并发安全问题，称为竞态条件（Race Condition）。由于多个线程共享相同的内存地址空间，并且是并发运行，因此可能会访问或修改其他线程正在使用的变量。这种方式比其他线程间通信机制更容易实现数据共享，但他同样也带来了巨大的风险：线程由于无法预料数据的变化而发生错误。</li>
+<li>hasNext()是否还有下一个元素。</li>
+<li>next()返回下一个元素。</li>
+<li>remove()删除当前元素。</li>
 </ol>
-<p>幸运的是，Java 提供了各种同步机制来协同这种访问。上面的示例代码，把它改成一个同步方法，就可以防止这种错误的发生。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnsafeSequene</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> value;</span><br><span class="line">    <span class="comment">//返回一个唯一的数值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">getNext</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="活跃性问题"><a href="#活跃性问题" class="headerlink" title="活跃性问题"></a>活跃性问题</h2><p>安全性的含义是，永远不发生糟糕的事情。活跃性是，某件正确的事情最终会发生。当某个操作无法继续执行下去时，就会发生活跃性问题，比如程序代码进入死循环。所线程导致的死锁，也是活跃性问题，比如线程 A 在等待线程 B 释放其持有的资源，而线程 B 永远都不释放改资源，那么，线程 A 就会永远的等待下去。</p>
-<h2 id="性能问题"><a href="#性能问题" class="headerlink" title="性能问题"></a>性能问题</h2><p>活跃性意味着某件正确的事情最终会发生，但却不够好。这就是性能问题，因为我们通常希望正确的事尽快发生。性能问题包括：服务时间过长，响应不灵敏，吞吐率过低，资源消耗过高等。</p>
-<p>良好的并发程序，线程能提高性能，但无论如何，总会带来某种程度的运行时开销。<br>1.线程调度临时挂起活跃线程并转而运行另一个线程时，就会频繁的出现上下文切换，带来极大的开销：保存和恢复执行上下文，CPU 时间更多的花在线程调度而不是线程运行上。<br>2.使用同步机制，往往会抑制某些编译器优化。</p>
-<h1 id="线程无处不在"><a href="#线程无处不在" class="headerlink" title="线程无处不在"></a>线程无处不在</h1><p>即使在程序中没有显示的创建线程，但在框架中仍可能会创建线程，因此在这些线程中调用的代码同样必须是线程安全的。框架通过在框架线程中调用应用程序代码将并发性引入到程序中。在代码中将不可避免地访问应用程序状态，因此所有访问这些状态的代码路径都必须是线程安全的。</p>
-<p>下面给出的模块都将在应用程序之外的线程中调用应用程序的代码。</p>
+<p>对于 Java 集合框架，这里不再做过多的说明，如果要完全剖析，那估计得再开一个专栏来讲。下面对具体容器类分类，我们直接来看他们分别属于哪些类型。</p>
+<h2 id="非同步集合"><a href="#非同步集合" class="headerlink" title="非同步集合"></a>非同步集合</h2><p>非同步集合，在并发访问的时候，是非线程安全的；但是由于它们没有同步策略(加锁机制)，它们的效率更高。常用的非同步集合它们包括下面几个：</p>
+<ul>
+<li>ArrayList</li>
+<li>HashSet</li>
+<li>HashMap</li>
+<li>LinkedList</li>
+<li>TreeSet</li>
+<li>TreeMap</li>
+<li>PriorityQueue</li>
+</ul>
+<h2 id="同步集合"><a href="#同步集合" class="headerlink" title="同步集合"></a>同步集合</h2><p>对每个方法都进行同步加锁，保证线程安全。</p>
+<ul>
+<li>HashTable</li>
+<li>Vector</li>
+<li>Stack</li>
+<li>同步包装器 : [ Collections.synchronizedMap(), Collections.synchronizedList() ]</li>
+</ul>
+<p>Java 集合类中非线程安全的集合可以用同步包装器使集合变成线程安全，其实实现原理就是相当于对每个方法加多一层同步锁而已，比如：</p>
 <ol>
-<li>Timer</li>
-<li>Servlet 和 JavaServer Page</li>
-<li>远程调用方法</li>
-<li>Swing 和 AWT</li>
+<li>HashMap –&gt; Collections.synchronizedMap(new HashMap())</li>
+<li>ArrayList –&gt; Collections.synchronizedList(new ArrayList&lt;&gt;())</li>
 </ol>
+<h2 id="并发集合"><a href="#并发集合" class="headerlink" title="并发集合"></a>并发集合</h2><p>java.util.concurrent包下，并发容器类如下：:</p>
+<ul>
+<li>ConcurrentHashMap</li>
+<li>ConcurrentSkipListMap</li>
+<li>ConcurrentSkipListSet</li>
+<li>CopyOnWriteArrayList</li>
+<li>CopyOnWriteArraySet</li>
+<li>ArrayBlockingQueue</li>
+<li>LinkedBlockingQueue</li>
+<li>PriorityBlockingQueue</li>
+<li>LinkedBlockingDeque</li>
+<li>ConcurrentLinkedQueue</li>
+</ul>
+<h2 id="同步集合类和并发集合类的区别"><a href="#同步集合类和并发集合类的区别" class="headerlink" title="同步集合类和并发集合类的区别"></a>同步集合类和并发集合类的区别</h2><p><strong>不管是同步集合还是并发集合他们都支持线程安全，他们之间主要的区别体现在性能和可扩展性，还有他们如何实现的线程安全</strong>。</p>
+<p>同步集合类，Hashtable 和 Vector 还有同步集合包装类，Collections.synchronizedMap()和Collections.synchronizedList()，相比并发的实现（比如：ConcurrentHashMap, CopyOnWriteArrayList, CopyOnWriteHashSet）会慢得多。</p>
+<p><strong>造成如此慢的主要原因是锁， 同步集合会把整个Map或List锁起来，每个操作都是串行的操作，同一时刻只有一个线程能操作。而并发集合不会，并发集合实现线程安全是通过使用先进的和成熟的技术把锁剥离。</strong></p>
+<p>比如ConcurrentHashMap 会把整个Map 划分成几个片段，只对相关的几个片段上锁，同时允许多线程访问其他未上锁的片段。</p>
+<p>CopyOnWriteArrayList 允许多个线程以非同步的方式读，当有线程写的时候它会将整个List复制一个副本给它。如果在读多写少这种对并发集合有利的条件下使用并发集合，这会比使用同步集合更具有可伸缩性。</p>
+<p>本文完结，如果文章有误，请批评指正；如果对你有帮助，可以关注我，谢谢！</p>
 <blockquote>
-<p>本文原创首发于微信公众号 [ 林里少年 ]，欢迎关注第一时间获取更新。<br><img src="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>本文原创首发于微信公众号 [ 林里少年 ]，欢迎关注第一时间获取更新。</p>
+<p><img src="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
 </blockquote>
 
       
@@ -494,7 +525,7 @@
     <strong>本文作者： </strong>seaicelin</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://seaicelin.github.io/2018/06/02/Java并发编程实战-简介/" title="[Java并发编程实战]简介">https://seaicelin.github.io/2018/06/02/Java并发编程实战-简介/</a>
+    <a href="https://seaicelin.github.io/2018/06/03/同步容器类-并发容器类/" title="同步容器类,并发容器类">https://seaicelin.github.io/2018/06/03/同步容器类-并发容器类/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -504,6 +535,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
       
 
       
@@ -529,8 +566,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/19/字典树/" rel="next" title="字典树">
-                <i class="fa fa-chevron-left"></i> 字典树
+              <a href="/2018/06/03/Java并发编程实战-设计线程安全的类的三个方式（含代码）/" rel="next" title="[Java并发编程实战]设计线程安全的类的三个方式（含代码）">
+                <i class="fa fa-chevron-left"></i> [Java并发编程实战]设计线程安全的类的三个方式（含代码）
               </a>
             
           </div>
@@ -539,8 +576,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/02/Java并发编程实战-线程安全/" rel="prev" title="[Java并发编程实战]线程安全">
-                [Java并发编程实战]线程安全 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/03/Java并发编程实战-同步容器类潜在的问题（含实例代码）/" rel="prev" title="[Java并发编程实战]同步容器类潜在的问题（含实例代码）">
+                [Java并发编程实战]同步容器类潜在的问题（含实例代码） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -733,7 +770,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#并发简史"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x5E76;&#x53D1;&#x7B80;&#x53F2;" class="headerlink" title="&#x5E76;&#x53D1;&#x7B80;&#x53F2;"></a>&#x5E76;&#x53D1;&#x7B80;&#x53F2;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程的优势"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x7EBF;&#x7A0B;&#x7684;&#x4F18;&#x52BF;" class="headerlink" title="&#x7EBF;&#x7A0B;&#x7684;&#x4F18;&#x52BF;"></a>&#x7EBF;&#x7A0B;&#x7684;&#x4F18;&#x52BF;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程的风险"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x7EBF;&#x7A0B;&#x7684;&#x98CE;&#x9669;" class="headerlink" title="&#x7EBF;&#x7A0B;&#x7684;&#x98CE;&#x9669;"></a>&#x7EBF;&#x7A0B;&#x7684;&#x98CE;&#x9669;</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安全性问题"><span class="nav-number">3.1.</span> <span class="nav-text"><a href="#&#x5B89;&#x5168;&#x6027;&#x95EE;&#x9898;" class="headerlink" title="&#x5B89;&#x5168;&#x6027;&#x95EE;&#x9898;"></a>&#x5B89;&#x5168;&#x6027;&#x95EE;&#x9898;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#活跃性问题"><span class="nav-number">3.2.</span> <span class="nav-text"><a href="#&#x6D3B;&#x8DC3;&#x6027;&#x95EE;&#x9898;" class="headerlink" title="&#x6D3B;&#x8DC3;&#x6027;&#x95EE;&#x9898;"></a>&#x6D3B;&#x8DC3;&#x6027;&#x95EE;&#x9898;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能问题"><span class="nav-number">3.3.</span> <span class="nav-text"><a href="#&#x6027;&#x80FD;&#x95EE;&#x9898;" class="headerlink" title="&#x6027;&#x80FD;&#x95EE;&#x9898;"></a>&#x6027;&#x80FD;&#x95EE;&#x9898;</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程无处不在"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x7EBF;&#x7A0B;&#x65E0;&#x5904;&#x4E0D;&#x5728;" class="headerlink" title="&#x7EBF;&#x7A0B;&#x65E0;&#x5904;&#x4E0D;&#x5728;"></a>&#x7EBF;&#x7A0B;&#x65E0;&#x5904;&#x4E0D;&#x5728;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java-集合框架"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Java-&#x96C6;&#x5408;&#x6846;&#x67B6;" class="headerlink" title="Java &#x96C6;&#x5408;&#x6846;&#x67B6;"></a>Java &#x96C6;&#x5408;&#x6846;&#x67B6;</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#非同步集合"><span class="nav-number">1.1.</span> <span class="nav-text"><a href="#&#x975E;&#x540C;&#x6B65;&#x96C6;&#x5408;" class="headerlink" title="&#x975E;&#x540C;&#x6B65;&#x96C6;&#x5408;"></a>&#x975E;&#x540C;&#x6B65;&#x96C6;&#x5408;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步集合"><span class="nav-number">1.2.</span> <span class="nav-text"><a href="#&#x540C;&#x6B65;&#x96C6;&#x5408;" class="headerlink" title="&#x540C;&#x6B65;&#x96C6;&#x5408;"></a>&#x540C;&#x6B65;&#x96C6;&#x5408;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并发集合"><span class="nav-number">1.3.</span> <span class="nav-text"><a href="#&#x5E76;&#x53D1;&#x96C6;&#x5408;" class="headerlink" title="&#x5E76;&#x53D1;&#x96C6;&#x5408;"></a>&#x5E76;&#x53D1;&#x96C6;&#x5408;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步集合类和并发集合类的区别"><span class="nav-number">1.4.</span> <span class="nav-text"><a href="#&#x540C;&#x6B65;&#x96C6;&#x5408;&#x7C7B;&#x548C;&#x5E76;&#x53D1;&#x96C6;&#x5408;&#x7C7B;&#x7684;&#x533A;&#x522B;" class="headerlink" title="&#x540C;&#x6B65;&#x96C6;&#x5408;&#x7C7B;&#x548C;&#x5E76;&#x53D1;&#x96C6;&#x5408;&#x7C7B;&#x7684;&#x533A;&#x522B;"></a>&#x540C;&#x6B65;&#x96C6;&#x5408;&#x7C7B;&#x548C;&#x5E76;&#x53D1;&#x96C6;&#x5408;&#x7C7B;&#x7684;&#x533A;&#x522B;</span></a></li></ol></li></ol></div>
             
 
           </div>

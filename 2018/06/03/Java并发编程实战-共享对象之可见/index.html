@@ -119,27 +119,29 @@
 
 
 
-  <meta name="description" content="并发简史在早期不包含操作系统的计算机中，程序都是单一的串行程序，从头至尾只能执行一个程序，并且这个程序访问这个计算机的所有资源。然而，随着技术的发展，操作系统出现了。它使得计算机程序有了进程，线程的概念，每次可以运行多个程序，并且不同的程序都在单独的进程中运行。操作系统为各个独立执行的进程分配各种资源，包括内存，文件句柄，安全证书等。不同进程之间通过系统本身的通信机制来交换数据，如：套接字，信号处">
+  <meta name="description" content="「 盛年不重来,一日难再晨,及时当勉励,岁月不待人。」   　陶渊明   我们已经知道同步代码块和同步方法可以保证以原子的方式执行，其实，同步还有另外一个重要概念：内存可见性。换句话说，我们不仅希望防止某个线程正在使用对象状态而另一个线程同时在修改状态，而且希望确保当一个线程修改了对象的状态后，其他线程能够看到修改后的状态。 可见性一个线程对共享变量值的修改，能够及时的被其他线程看到。可见性微妙">
+<meta name="keywords" content="java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="[Java并发编程实战]简介">
-<meta property="og:url" content="https://seaicelin.github.io/2018/06/02/Java并发编程实战-简介/index.html">
+<meta property="og:title" content="[Java并发编程实战]共享对象之可见">
+<meta property="og:url" content="https://seaicelin.github.io/2018/06/03/Java并发编程实战-共享对象之可见/index.html">
 <meta property="og:site_name" content="seaicelin">
-<meta property="og:description" content="并发简史在早期不包含操作系统的计算机中，程序都是单一的串行程序，从头至尾只能执行一个程序，并且这个程序访问这个计算机的所有资源。然而，随着技术的发展，操作系统出现了。它使得计算机程序有了进程，线程的概念，每次可以运行多个程序，并且不同的程序都在单独的进程中运行。操作系统为各个独立执行的进程分配各种资源，包括内存，文件句柄，安全证书等。不同进程之间通过系统本身的通信机制来交换数据，如：套接字，信号处">
+<meta property="og:description" content="「 盛年不重来,一日难再晨,及时当勉励,岁月不待人。」   　陶渊明   我们已经知道同步代码块和同步方法可以保证以原子的方式执行，其实，同步还有另外一个重要概念：内存可见性。换句话说，我们不仅希望防止某个线程正在使用对象状态而另一个线程同时在修改状态，而且希望确保当一个线程修改了对象的状态后，其他线程能够看到修改后的状态。 可见性一个线程对共享变量值的修改，能够及时的被其他线程看到。可见性微妙">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://img-blog.csdn.net/20180515194751171?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180518163741932?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180518163800149?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 <meta property="og:image" content="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-06-02T10:04:38.000Z">
+<meta property="og:updated_time" content="2018-06-03T03:28:53.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="[Java并发编程实战]简介">
-<meta name="twitter:description" content="并发简史在早期不包含操作系统的计算机中，程序都是单一的串行程序，从头至尾只能执行一个程序，并且这个程序访问这个计算机的所有资源。然而，随着技术的发展，操作系统出现了。它使得计算机程序有了进程，线程的概念，每次可以运行多个程序，并且不同的程序都在单独的进程中运行。操作系统为各个独立执行的进程分配各种资源，包括内存，文件句柄，安全证书等。不同进程之间通过系统本身的通信机制来交换数据，如：套接字，信号处">
-<meta name="twitter:image" content="https://img-blog.csdn.net/20180515194751171?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta name="twitter:title" content="[Java并发编程实战]共享对象之可见">
+<meta name="twitter:description" content="「 盛年不重来,一日难再晨,及时当勉励,岁月不待人。」   　陶渊明   我们已经知道同步代码块和同步方法可以保证以原子的方式执行，其实，同步还有另外一个重要概念：内存可见性。换句话说，我们不仅希望防止某个线程正在使用对象状态而另一个线程同时在修改状态，而且希望确保当一个线程修改了对象的状态后，其他线程能够看到修改后的状态。 可见性一个线程对共享变量值的修改，能够及时的被其他线程看到。可见性微妙">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20180518163741932?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 
 
 
 
 
 
-  <link rel="canonical" href="https://seaicelin.github.io/2018/06/02/Java并发编程实战-简介/"/>
+  <link rel="canonical" href="https://seaicelin.github.io/2018/06/03/Java并发编程实战-共享对象之可见/"/>
 
 
 
@@ -149,7 +151,7 @@
   };
 </script>
 
-  <title>[Java并发编程实战]简介 | seaicelin</title>
+  <title>[Java并发编程实战]共享对象之可见 | seaicelin</title>
   
 
 
@@ -314,7 +316,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/02/Java并发编程实战-简介/">
+    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/03/Java并发编程实战-共享对象之可见/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="seaicelin">
@@ -331,7 +333,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">[Java并发编程实战]简介
+          <h1 class="post-title" itemprop="name headline">[Java并发编程实战]共享对象之可见
               
             
           </h1>
@@ -356,7 +358,7 @@
                 
               
 
-              <time title="创建时间：2018-06-02 18:03:55 / 修改时间：18:04:38" itemprop="dateCreated datePublished" datetime="2018-06-02T18:03:55+08:00">2018-06-02</time>
+              <time title="创建时间：2018-06-03 11:15:54 / 修改时间：11:28:53" itemprop="dateCreated datePublished" datetime="2018-06-03T11:15:54+08:00">2018-06-03</time>
             
 
             
@@ -374,7 +376,7 @@
 
           
           
-             <span id="/2018/06/02/Java并发编程实战-简介/" class="leancloud_visitors" data-flag-title="[Java并发编程实战]简介">
+             <span id="/2018/06/03/Java并发编程实战-共享对象之可见/" class="leancloud_visitors" data-flag-title="[Java并发编程实战]共享对象之可见">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -405,43 +407,55 @@
       
 
       
-        <h1 id="并发简史"><a href="#并发简史" class="headerlink" title="并发简史"></a>并发简史</h1><p>在早期不包含操作系统的计算机中，程序都是单一的串行程序，从头至尾只能执行一个程序，并且这个程序访问这个计算机的所有资源。然而，随着技术的发展，操作系统出现了。它使得计算机程序有了进程，线程的概念，每次可以运行多个程序，并且不同的程序都在单独的进程中运行。操作系统为各个独立执行的进程分配各种资源，包括内存，文件句柄，安全证书等。不同进程之间通过系统本身的通信机制来交换数据，如：套接字，信号处理器，共享内存，信号量以及文件等。<br>操作系统支持多个程序同时执行，原因主要有：</p>
+        <blockquote>
+<p>「 <strong><em>盛年不重来,一日难再晨,及时当勉励,岁月不待人。</em></strong>」   　<strong><em>陶渊明</em></strong> </p>
+</blockquote>
+<p>我们已经知道同步代码块和同步方法可以保证以原子的方式执行，其实，同步还有另外一个重要概念：内存可见性。换句话说，我们不仅希望防止某个线程正在使用对象状态而另一个线程同时在修改状态，而且希望确保当一个线程修改了对象的状态后，其他线程能够看到修改后的状态。</p>
+<h1 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h1><p>一个线程对共享变量值的修改，能够及时的被其他线程看到。可见性微妙的，这是因为可能发生错误的事情总是与直觉大相径庭。来看下面这个例子和他的执行结果：</p>
+<pre><code>public class NoVisibility {
+    private static boolean ready;
+    private static int number;
+    private static class ReaderThread extends Thread {
+
+        public void run() {
+            while(!ready)
+                Thread.yield();
+            System.out.println(number);
+        }
+    }
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        new ReaderThread().start();
+        number = 88;
+        ready = true;
+    }
+}
+</code></pre><p>上面的代码清单，亲测执行的结果是88。<br>然而，书本上的解释是可能出现错误的结果。错误的结果有下面两种情况（我重现不到下面的结果）：</p>
 <ol>
-<li>资源利用率。如某个程序在等待一个耗时操作完成，那么在等待的同时可以运行另外一个程序，这样可以提高资源利用率。</li>
-<li>公平性。如通过时间片的方式让程序轮流占用计算机资源，而不是由一个程序从头至尾运行完，再进行下一个。</li>
-<li>便利性。编写多个程序来计算多个任务，必要时进行通信。比只编写一个程序来计算所有任务更加容易实现。</li>
+<li>NoVisibility 可能会一直保持循环，因为对读线程来说，主线程写给 ready 的值可能永远对读线程不可见。</li>
+<li>NoVisibility 可能会打印0，因为早在对 number 赋值之前，主线程就已经写入 ready 并使之对读线程可见，这是一种重排序。</li>
 </ol>
-<p>串行编程模型优势在于直观性和简单性，每次只做一件事直至完成，然后再做另外一件。然而很多情况下，这个串行模型并不理想。打个比方，我们想烧水泡茶然后看书，以串行的工作方式，我们必须等到水烧开了把茶泡好，才能去看书。而现实生活中，完全可以烧水的过程先去看书，然后等待水烧开在去泡茶。这也引出了计算机应用程序用，同步和异步的概念。正是这些原因，促使进程，线程的出现。</p>
-<p>线程，也被称为轻量级进程。现在大多数操作系统中，都是以线程为基本的调度单位，而不是进程。一个进程可以创建多个线程，并且这些线程会共享进程范围内的资源。所以，多个线程如果没有明确的协同机制，那么他们是独立运行的。同样，这些线程都可以访问进程的变量，如果没有明确的同步机制来协同对共享数据的访问，那么当一个线程正在使用某个变量时，另外一个线程可能同时访问这个变量，造成不可预测的结果。但是，每个线程都有各自的计数器，栈以及局部变量等。</p>
-<h1 id="线程的优势"><a href="#线程的优势" class="headerlink" title="线程的优势"></a>线程的优势</h1><p>如果使用得当，可以降低开发，维护成本，提升性能。线程还可以降低代码复杂度，使得代码更容易编写，阅读和维护。在GUI 程序中，可以提高界面的响应速度；在服务端程序中，可以提升资源利用率和吞吐率。</p>
+<p>即可亲测没有发生，但是可能会发生。为了防止这种现象的发生，只能通过对共享变量进行恰当的同步。</p>
+<h4 id="Java-内存模型（JMM-Java-Memory-Model）"><a href="#Java-内存模型（JMM-Java-Memory-Model）" class="headerlink" title="Java 内存模型（JMM,Java Memory Model）"></a>Java 内存模型（JMM,Java Memory Model）</h4><p>描述了 java 程序中各种变量（线程共享变量）的访问规则，以及在 JVM 中将变量存储到内存和从内存中读取出变量的底层细节。<br><img src="https://img-blog.csdn.net/20180518163741932?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>所有变量都存储在主内存中，每个线程都有自己独立的工作内存，里面保存该线程使用到的变量副本，即主内存中该变量的一份拷贝。</p>
+<p>线程对共享变量的所有操作必须在自己的工作内存，线程间变量值的传递需要通过主内存来完成。</p>
+<h4 id="加锁与可见性"><a href="#加锁与可见性" class="headerlink" title="加锁与可见性"></a>加锁与可见性</h4><p>加锁的含义不仅仅局限于互斥行为，还包括内存可见性。为了确保所有线程都能看到共享变量的最新值，所有执行读操作或者写操作都必须在同一个锁上同步。<br><img src="https://img-blog.csdn.net/20180518163800149?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>当线程 B 执行有锁保护的代码块时，可以看到线程 A 之前在同一个同步代码块中所有的操作结果。这就是为啥要求所有线程在同一个锁上同步，为了确保某个线程写入该变量的值对于其他线程来说是可见的。</p>
+<h4 id="非原子的64位操作"><a href="#非原子的64位操作" class="headerlink" title="非原子的64位操作"></a>非原子的64位操作</h4><p>JVM 允许将64位的读操作或写操作分解为两个32位的操作。Java 中的 long 类型和 double 类型是64位的，所以当读取一个非 volatile 类型的 long 变量时，如果该变量的读操作和写操作在不同的线程中执行，那么很可能会读取到某个值的高32位和另一个值的低32位。因此，在多线程中使用共享的可变的 long 和 double 类型变量时不安全的，除非用关键字 volatile 来声明他们，或者用锁保护起来。</p>
+<h4 id="volatile变量"><a href="#volatile变量" class="headerlink" title="volatile变量"></a>volatile变量</h4><p>Java 提供了一种稍弱的同步机制，即 volatile 变量，用来确保将变量的更新操作通知到其他线程。volatile 变量具有 synchronized 的可见性，但是不具备原子特性。要使 volatile 变量提供理想的线程安全，必须同时满足下面两个条件：</p>
 <ul>
-<li>发挥多核处理器的强大能力。</li>
-<li>建模的简单性。将复杂且异步的工作流分解到各个线程运行，在特定的同步位置进行交互。</li>
-<li>异步事件的简化处理。某个线程的阻塞不影响其他线程的处理。</li>
-<li>响应更灵敏的用户界面。使用特定线程来处理耗时操作，而不是放在UI主线程中处理。比如 Android App 耗时事件不能在 UI 线程处理，会影响 UI 响应的流畅度。</li>
+<li>对变量的写操作不依赖于自身当前值</li>
+<li>该变量没有包含在具有其他变量的不变式中</li>
 </ul>
-<h1 id="线程的风险"><a href="#线程的风险" class="headerlink" title="线程的风险"></a>线程的风险</h1><p>Java 对线程的使用是一把双刃剑。线程的优势我们都已经知道，前提是我们能够正确的编写出安全的并发代码。然而，由于开发人员的技术不足，并发潜在风险的不易察觉，都有可能让我们的程序达不到预期的效果。所以，我们有必要了解一下并发风险这一方面的内容。</p>
-<h2 id="安全性问题"><a href="#安全性问题" class="headerlink" title="安全性问题"></a>安全性问题</h2><p>多个线程的执行顺序，在没有同步的情况下是不可预测的，甚至产生奇怪的结果。如下面这个序列生成类，多个线程同时获取到的值可能是相同的。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnsafeSequene</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> value;</span><br><span class="line">    <span class="comment">//返回一个唯一的数值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getNext</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>递增操作 value++，实际上他包含三个独立的操作：</p>
-<ol>
-<li>读取 value 的值</li>
-<li>将 value 加 1</li>
-<li>将计算结果写入 value<br>由于多个线程之间的操作交替执行，所以可能发生两个线程读到相同的值。如下图所示的 A 线程和 B 线程：<br><img src="https://img-blog.csdn.net/20180515194751171?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br>上图说明的是一种常见的并发安全问题，称为竞态条件（Race Condition）。由于多个线程共享相同的内存地址空间，并且是并发运行，因此可能会访问或修改其他线程正在使用的变量。这种方式比其他线程间通信机制更容易实现数据共享，但他同样也带来了巨大的风险：线程由于无法预料数据的变化而发生错误。</li>
-</ol>
-<p>幸运的是，Java 提供了各种同步机制来协同这种访问。上面的示例代码，把它改成一个同步方法，就可以防止这种错误的发生。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UnsafeSequene</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> value;</span><br><span class="line">    <span class="comment">//返回一个唯一的数值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">getNext</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> value++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="活跃性问题"><a href="#活跃性问题" class="headerlink" title="活跃性问题"></a>活跃性问题</h2><p>安全性的含义是，永远不发生糟糕的事情。活跃性是，某件正确的事情最终会发生。当某个操作无法继续执行下去时，就会发生活跃性问题，比如程序代码进入死循环。所线程导致的死锁，也是活跃性问题，比如线程 A 在等待线程 B 释放其持有的资源，而线程 B 永远都不释放改资源，那么，线程 A 就会永远的等待下去。</p>
-<h2 id="性能问题"><a href="#性能问题" class="headerlink" title="性能问题"></a>性能问题</h2><p>活跃性意味着某件正确的事情最终会发生，但却不够好。这就是性能问题，因为我们通常希望正确的事尽快发生。性能问题包括：服务时间过长，响应不灵敏，吞吐率过低，资源消耗过高等。</p>
-<p>良好的并发程序，线程能提高性能，但无论如何，总会带来某种程度的运行时开销。<br>1.线程调度临时挂起活跃线程并转而运行另一个线程时，就会频繁的出现上下文切换，带来极大的开销：保存和恢复执行上下文，CPU 时间更多的花在线程调度而不是线程运行上。<br>2.使用同步机制，往往会抑制某些编译器优化。</p>
-<h1 id="线程无处不在"><a href="#线程无处不在" class="headerlink" title="线程无处不在"></a>线程无处不在</h1><p>即使在程序中没有显示的创建线程，但在框架中仍可能会创建线程，因此在这些线程中调用的代码同样必须是线程安全的。框架通过在框架线程中调用应用程序代码将并发性引入到程序中。在代码中将不可避免地访问应用程序状态，因此所有访问这些状态的代码路径都必须是线程安全的。</p>
-<p>下面给出的模块都将在应用程序之外的线程中调用应用程序的代码。</p>
-<ol>
-<li>Timer</li>
-<li>Servlet 和 JavaServer Page</li>
-<li>远程调用方法</li>
-<li>Swing 和 AWT</li>
-</ol>
+<p>volatile 通常被当做标识完成、中断、状态的标记使用。典型应用如下代码，检查状态标记，以确定是否退出一个循环。</p>
+<pre><code>volatile boolean asleep;
+    while(!asleep)
+        countSomeSheep();
+</code></pre><p>当然，上面也可以用锁，但是会让代码变得复杂。volatile 变量不会加锁，也就不会引起线程的阻塞，相比 sychronized, 这只是轻量级的同步机制。尽管 volatile 也可以用来标识其他类型的状态信息，但是要格外小心。比如， volatile 的语义不足以使自增操作（count++）原子化。</p>
 <blockquote>
-<p>本文原创首发于微信公众号 [ 林里少年 ]，欢迎关注第一时间获取更新。<br><img src="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+<p>本文原创首发于微信公众号 [ 林里少年 ]，欢迎关注第一时间获取更新。</p>
+<p><img src="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
 </blockquote>
 
       
@@ -494,7 +508,7 @@
     <strong>本文作者： </strong>seaicelin</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://seaicelin.github.io/2018/06/02/Java并发编程实战-简介/" title="[Java并发编程实战]简介">https://seaicelin.github.io/2018/06/02/Java并发编程实战-简介/</a>
+    <a href="https://seaicelin.github.io/2018/06/03/Java并发编程实战-共享对象之可见/" title="[Java并发编程实战]共享对象之可见">https://seaicelin.github.io/2018/06/03/Java并发编程实战-共享对象之可见/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -504,6 +518,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+        </div>
       
 
       
@@ -529,8 +549,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/19/字典树/" rel="next" title="字典树">
-                <i class="fa fa-chevron-left"></i> 字典树
+              <a href="/2018/06/02/Java并发编程实战-线程安全/" rel="next" title="[Java并发编程实战]线程安全">
+                <i class="fa fa-chevron-left"></i> [Java并发编程实战]线程安全
               </a>
             
           </div>
@@ -539,8 +559,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/02/Java并发编程实战-线程安全/" rel="prev" title="[Java并发编程实战]线程安全">
-                [Java并发编程实战]线程安全 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/03/Java并发编程实战-对volatile变量进行实例验证（内含源码）/" rel="prev" title="[Java并发编程实战]对volatile变量进行实例验证（内含源码）">
+                [Java并发编程实战]对volatile变量进行实例验证（内含源码） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -733,7 +753,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#并发简史"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x5E76;&#x53D1;&#x7B80;&#x53F2;" class="headerlink" title="&#x5E76;&#x53D1;&#x7B80;&#x53F2;"></a>&#x5E76;&#x53D1;&#x7B80;&#x53F2;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程的优势"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x7EBF;&#x7A0B;&#x7684;&#x4F18;&#x52BF;" class="headerlink" title="&#x7EBF;&#x7A0B;&#x7684;&#x4F18;&#x52BF;"></a>&#x7EBF;&#x7A0B;&#x7684;&#x4F18;&#x52BF;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程的风险"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x7EBF;&#x7A0B;&#x7684;&#x98CE;&#x9669;" class="headerlink" title="&#x7EBF;&#x7A0B;&#x7684;&#x98CE;&#x9669;"></a>&#x7EBF;&#x7A0B;&#x7684;&#x98CE;&#x9669;</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安全性问题"><span class="nav-number">3.1.</span> <span class="nav-text"><a href="#&#x5B89;&#x5168;&#x6027;&#x95EE;&#x9898;" class="headerlink" title="&#x5B89;&#x5168;&#x6027;&#x95EE;&#x9898;"></a>&#x5B89;&#x5168;&#x6027;&#x95EE;&#x9898;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#活跃性问题"><span class="nav-number">3.2.</span> <span class="nav-text"><a href="#&#x6D3B;&#x8DC3;&#x6027;&#x95EE;&#x9898;" class="headerlink" title="&#x6D3B;&#x8DC3;&#x6027;&#x95EE;&#x9898;"></a>&#x6D3B;&#x8DC3;&#x6027;&#x95EE;&#x9898;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能问题"><span class="nav-number">3.3.</span> <span class="nav-text"><a href="#&#x6027;&#x80FD;&#x95EE;&#x9898;" class="headerlink" title="&#x6027;&#x80FD;&#x95EE;&#x9898;"></a>&#x6027;&#x80FD;&#x95EE;&#x9898;</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#线程无处不在"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x7EBF;&#x7A0B;&#x65E0;&#x5904;&#x4E0D;&#x5728;" class="headerlink" title="&#x7EBF;&#x7A0B;&#x65E0;&#x5904;&#x4E0D;&#x5728;"></a>&#x7EBF;&#x7A0B;&#x65E0;&#x5904;&#x4E0D;&#x5728;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#可见性"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x53EF;&#x89C1;&#x6027;" class="headerlink" title="&#x53EF;&#x89C1;&#x6027;"></a>&#x53EF;&#x89C1;&#x6027;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Java-内存模型（JMM-Java-Memory-Model）"><span class="nav-number">1.0.0.1.</span> <span class="nav-text"><a href="#Java-&#x5185;&#x5B58;&#x6A21;&#x578B;&#xFF08;JMM-Java-Memory-Model&#xFF09;" class="headerlink" title="Java &#x5185;&#x5B58;&#x6A21;&#x578B;&#xFF08;JMM,Java Memory Model&#xFF09;"></a>Java &#x5185;&#x5B58;&#x6A21;&#x578B;&#xFF08;JMM,Java Memory Model&#xFF09;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#加锁与可见性"><span class="nav-number">1.0.0.2.</span> <span class="nav-text"><a href="#&#x52A0;&#x9501;&#x4E0E;&#x53EF;&#x89C1;&#x6027;" class="headerlink" title="&#x52A0;&#x9501;&#x4E0E;&#x53EF;&#x89C1;&#x6027;"></a>&#x52A0;&#x9501;&#x4E0E;&#x53EF;&#x89C1;&#x6027;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#非原子的64位操作"><span class="nav-number">1.0.0.3.</span> <span class="nav-text"><a href="#&#x975E;&#x539F;&#x5B50;&#x7684;64&#x4F4D;&#x64CD;&#x4F5C;" class="headerlink" title="&#x975E;&#x539F;&#x5B50;&#x7684;64&#x4F4D;&#x64CD;&#x4F5C;"></a>&#x975E;&#x539F;&#x5B50;&#x7684;64&#x4F4D;&#x64CD;&#x4F5C;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#volatile变量"><span class="nav-number">1.0.0.4.</span> <span class="nav-text"><a href="#volatile&#x53D8;&#x91CF;" class="headerlink" title="volatile&#x53D8;&#x91CF;"></a>volatile&#x53D8;&#x91CF;</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>

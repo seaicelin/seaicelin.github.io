@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-center-simple.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="「 天行健，君子以自强不息。地势坤，君子以厚德载物。」———《易经》  volatile 变量，在上一篇文章中已经有简单提及相关概念和用法，这一篇主要对 Volatile 变量的特性进行源码验证。验证它的涉及到的三个特性：  可见性 指令重排序 非原子性  volatile 之可见性验证上一篇文章中，讲到 volatile 变量通常被当做状态标记使用。其中典型的应用是，检查标记状态，以确定是否退">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Java并发编程实战]对volatile变量进行实例验证（内含源码）">
+<meta property="og:url" content="https://seaicelin.github.io/2018/06/03/Java并发编程实战-对volatile变量进行实例验证（内含源码）/index.html">
+<meta property="og:site_name" content="seaicelin">
+<meta property="og:description" content="「 天行健，君子以自强不息。地势坤，君子以厚德载物。」———《易经》  volatile 变量，在上一篇文章中已经有简单提及相关概念和用法，这一篇主要对 Volatile 变量的特性进行源码验证。验证它的涉及到的三个特性：  可见性 指令重排序 非原子性  volatile 之可见性验证上一篇文章中，讲到 volatile 变量通常被当做状态标记使用。其中典型的应用是，检查标记状态，以确定是否退">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://img-blog.csdn.net/20180521174020159?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180521174107845?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-06-03T03:29:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[Java并发编程实战]对volatile变量进行实例验证（内含源码）">
+<meta name="twitter:description" content="「 天行健，君子以自强不息。地势坤，君子以厚德载物。」———《易经》  volatile 变量，在上一篇文章中已经有简单提及相关概念和用法，这一篇主要对 Volatile 变量的特性进行源码验证。验证它的涉及到的三个特性：  可见性 指令重排序 非原子性  volatile 之可见性验证上一篇文章中，讲到 volatile 变量通常被当做状态标记使用。其中典型的应用是，检查标记状态，以确定是否退">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20180521174020159?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+
+
+
+
+
+
+  <link rel="canonical" href="https://seaicelin.github.io/2018/06/03/Java并发编程实战-对volatile变量进行实例验证（内含源码）/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>[Java并发编程实战]对volatile变量进行实例验证（内含源码） | seaicelin</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">seaicelin</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">用心做好每件事~</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/03/Java并发编程实战-对volatile变量进行实例验证（内含源码）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="seaicelin">
+      <meta itemprop="description" content="一个安卓通信人，专注android开发。 三观正。 <br>欢迎关注我的公众号：林里少年(id:seaicelin)<br>文章都会同步发于微信公众号!">
+      <meta itemprop="image" content="/images/touxiang.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="seaicelin">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[Java并发编程实战]对volatile变量进行实例验证（内含源码）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-03 11:16:52 / 修改时间：11:29:41" itemprop="dateCreated datePublished" datetime="2018-06-03T11:16:52+08:00">2018-06-03</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/06/03/Java并发编程实战-对volatile变量进行实例验证（内含源码）/" class="leancloud_visitors" data-flag-title="[Java并发编程实战]对volatile变量进行实例验证（内含源码）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>「 天行健，君子以自强不息。地势坤，君子以厚德载物。」———《易经》</p>
+</blockquote>
+<p>volatile 变量，在上一篇文章中已经有简单提及相关概念和用法，这一篇主要对 Volatile 变量的特性进行源码验证。验证它的涉及到的三个特性：</p>
+<ul>
+<li>可见性</li>
+<li>指令重排序</li>
+<li>非原子性</li>
+</ul>
+<h1 id="volatile-之可见性验证"><a href="#volatile-之可见性验证" class="headerlink" title="volatile 之可见性验证"></a>volatile 之可见性验证</h1><p>上一篇文章中，讲到 volatile 变量通常被当做状态标记使用。其中典型的应用是，检查标记状态，以确定是否退出循环。下面我们直接举个反例，源码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Volatile</span> </span>&#123;</span><br><span class="line">		</span><br><span class="line">	    <span class="keyword">boolean</span> ready=<span class="keyword">true</span>;  <span class="comment">//volatile 状态标志变量</span></span><br><span class="line">	    </span><br><span class="line">	    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> SIZE = <span class="number">10</span>; <span class="comment">//创建10个对象，可改变</span></span><br><span class="line">	    </span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException</span>&#123;</span><br><span class="line">	        </span><br><span class="line">	        Volatile vs[]=<span class="keyword">new</span> Volatile[SIZE];</span><br><span class="line">	</span><br><span class="line">	        <span class="keyword">for</span>(<span class="keyword">int</span> n=<span class="number">0</span>;n&lt;SIZE;n++)</span><br><span class="line">	            (vs[n]=<span class="keyword">new</span> Volatile()).test(); </span><br><span class="line">	        </span><br><span class="line">	        System.out.println(<span class="string">"mainThread end"</span>);<span class="comment">//调用结束打印，死循环时不打印</span></span><br><span class="line">	    &#125;</span><br><span class="line">	</span><br><span class="line">	    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>&#123;</span><br><span class="line">	        Thread t2=<span class="keyword">new</span> Thread()&#123;</span><br><span class="line">	            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">	                <span class="keyword">while</span>(ready);<span class="comment">//变量为true时，让其死循环</span></span><br><span class="line">	            &#125;</span><br><span class="line">	        &#125;;</span><br><span class="line">	        Thread t1=<span class="keyword">new</span> Thread()&#123;</span><br><span class="line">	            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">	            	ready=<span class="keyword">false</span>;</span><br><span class="line">	            &#125;</span><br><span class="line">	        &#125;;</span><br><span class="line">	        t2.start();</span><br><span class="line">	        Thread.yield();</span><br><span class="line">	        t1.start();</span><br><span class="line">	        t1.join();<span class="comment">//保证一次只运行一个测试，以此减少其它线程的调度对 t2对boolValue的响应时间 的影响</span></span><br><span class="line">	        t2.join();</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;</span><br><span class="line">```	</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">其中，ready 变量是我们要验证的 <span class="keyword">volatile</span> 变量。一开始 ready 初始化为 <span class="keyword">true</span>,其次启动 t2 线程让其进入死循环；接着，t1 线程启动，并且让 t1 线程先执行，将 ready 改为 <span class="keyword">false</span>。理论上来讲，此时 t2 线程应该跳出死循环，但是实际上并没有。此时 t2 线程读到的 ready 的值仍然为 <span class="keyword">true</span>。所以这段程序一直没有打印出结果。这便是多线程间的不可见性问题,官方话术为: 线程 t1 修改后的值对线程 t2 来说并不可见。下图可以看到程序一直处于运行状态：</span><br><span class="line"></span><br><span class="line">![这里写图片描述](https:<span class="comment">//img-blog.csdn.net/2018052117415179?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)</span></span><br><span class="line"></span><br><span class="line">解决办法是：对变量 ready 声明为 <span class="keyword">volatile</span>，再次执行者段程序，能够顺利打印出 “mainTread end”。<span class="keyword">volatile</span> 保证了变量 ready 的可见性。</span><br><span class="line"></span><br><span class="line">![这里写图片描述](https:<span class="comment">//img-blog.csdn.net/20180521174204157?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)</span></span><br><span class="line"></span><br><span class="line">另外补充说明我这个例子用的 Java 版本：</span><br><span class="line"></span><br><span class="line">![这里写图片描述](https:<span class="comment">//img-blog.csdn.net/20180521174314741?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)</span></span><br><span class="line"># volatile 之重排序问题说明</span><br><span class="line">有序性：表示程序的执行顺序按照代码的先后顺序执行。通过下面代码，我们将更加直观的理解有序性。</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">2</span>;</span><br><span class="line">a = <span class="number">3</span>;     <span class="comment">//语句A</span></span><br><span class="line">b = <span class="number">4</span>;     <span class="comment">//语句B</span></span><br></pre></td></tr></table></figure>
+<p>上面代码，语句 A 一定在语句 B 之前执行吗? 答案是否定的。因为这里可能发生指令重排序。语句 B 可能先于语句 A 先自行。</p>
+<p>什么是指令重排序？处理器为了提高运行效率，可能对输入代码进行优化，他不保证程序中各个语句的执行先后顺序同代码中的顺序一致，但是他会保证程序最终执行的结果和代码顺序执行的结果是一致的。</p>
+<p>但是下面这种情况，语句 B 一定在 语句 A 之后执行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">2</span>;</span><br><span class="line">a = <span class="number">3</span>;     <span class="comment">//语句A</span></span><br><span class="line">b = a + <span class="number">3</span>;     <span class="comment">//语句B</span></span><br></pre></td></tr></table></figure>
+<p>原因是，变量 b 依赖 a 的值，重排序时处理器会考虑指令之间的依赖性。</p>
+<p>当然，这个 volatile 有什么关系呢？<br>volatile 变量可以一定程度上保证有序性，volatile 关键字禁止指令重排序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//x、y为非volatile变量</span></span><br><span class="line"><span class="comment">//flag为volatile变量</span></span><br><span class="line">	</span><br><span class="line">x = <span class="number">1</span>;        <span class="comment">//语句1</span></span><br><span class="line">y = <span class="number">2</span>;        <span class="comment">//语句2</span></span><br><span class="line">flag = <span class="keyword">true</span>;  <span class="comment">//语句3</span></span><br><span class="line">	</span><br><span class="line">x = <span class="number">3</span>;         <span class="comment">//语句4</span></span><br><span class="line">y = <span class="number">4</span>;       <span class="comment">//语句5</span></span><br></pre></td></tr></table></figure>
+<p>这里要说明的是，flag 为 volatile 变量；能保证</p>
+<ol>
+<li>语句1，语句2 一定是在语句3的前面执行，但不保证语句1，语句2的执行顺序。</li>
+<li>语句4，语句5 一定是在语句3的后面执行，但不保证语句4，语句5的执行顺序。</li>
+<li>语句1，语句2 的执行结果，对语句3，语句4，语句5是可见的。</li>
+</ol>
+<p>以上，就是关于 volatile 的禁止重排序的说明。、</p>
+<h1 id="volatile-之非原子性问题验证"><a href="#volatile-之非原子性问题验证" class="headerlink" title="volatile 之非原子性问题验证"></a>volatile 之非原子性问题验证</h1><p>volatile 关键字并不能保证原子性，如自增操作。下面看一个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Volatile</span></span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">final</span> Volatile v = <span class="keyword">new</span> Volatile();</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">			<span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">	</span><br><span class="line">				<span class="meta">@Override</span></span><br><span class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">					<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">					v.count++;</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">			&#125;).start();</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">while</span>(Thread.activeCount() &gt; <span class="number">1</span>)</span><br><span class="line">			Thread.yield();</span><br><span class="line">		</span><br><span class="line">		System.out.println(v.count);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个程序执行的结果并没有达到我们的期望值，1000。并且每次的运行结果可能都不一样，如下图，有可能是 997 等。</p>
+<p><img src="https://img-blog.csdn.net/20180521174020159?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>来看下面一副图，分解自增操作的步骤。</p>
+<ol>
+<li>read&amp;load 从主内存复制变量到当前工作内存。</li>
+<li>use&amp;assign 执行代码，改变共享变量的值。</li>
+<li>store&amp;write 用工作内存数据刷新主内存相关内容。</li>
+</ol>
+<p><img src="https://img-blog.csdn.net/20180521174107845?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>但是，这一系列的操作并不是原子的。也就是在 read&amp;load 之后，如果主内存 count 发生变化，线程工作内存中的值由于已经加载，不会产生对应的变化。所以计算出来的结果和我们预期不一样。</p>
+<p>对于 volatile 修饰的变量，jvm 虚拟机只是保证从主内存加载到线程工作内存中的值是最新的。</p>
+<p>所以，假如线程 A 和 B 在read&amp;load 过程中，发现主内存中的值都是5，那么都会加载这个最新的值 5。线程 A 修改后写到主内存,更新主内存的值为6。线程 B 由于已经 read &amp; load,注意到此时线程 B 工作内存中的值还是5， 所以修改后也会将6更新到主内存。</p>
+<p>那么两个线程分别进行一次自增操作后，count 只增加了1，结果也就错了。</p>
+<p>当然，我们可以通过并发安全类AomicInteger, 内置锁 sychronized,显示锁 ReentrantLock，来规避这个问题，让程序运行结果达到我们的期望值 1000.</p>
+<p>1）采用并发安全类 AomicInteger 的方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicInteger;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Volatile</span></span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> AtomicInteger  count = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">final</span> Volatile v = <span class="keyword">new</span> Volatile();</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">			<span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">	</span><br><span class="line">				<span class="meta">@Override</span></span><br><span class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">					<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">					v.count.incrementAndGet();</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">			&#125;).start();</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">while</span>(Thread.activeCount() &gt; <span class="number">1</span>)</span><br><span class="line">			Thread.yield();</span><br><span class="line">		</span><br><span class="line">		System.out.println(v.count);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2） 采用内置锁 synchronized 的方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Volatile</span></span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">final</span> Volatile v = <span class="keyword">new</span> Volatile();</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">			<span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"></span><br><span class="line">				<span class="meta">@Override</span></span><br><span class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">					<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">					<span class="keyword">synchronized</span>  (<span class="keyword">this</span>) &#123;</span><br><span class="line">						v.count++;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">			&#125;).start();</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">while</span>(Thread.activeCount() &gt; <span class="number">1</span>)</span><br><span class="line">			Thread.yield();</span><br><span class="line">		</span><br><span class="line">		System.out.println(v.count);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3）采用显示锁的方式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.Lock;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.ReentrantLock;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Volatile</span></span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">	</span><br><span class="line">	Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">final</span> Volatile v = <span class="keyword">new</span> Volatile();</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span><br><span class="line">			<span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">	</span><br><span class="line">				<span class="meta">@Override</span></span><br><span class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">					<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">						v.lock.lock();</span><br><span class="line">						<span class="keyword">try</span> &#123;</span><br><span class="line">							v.count++;</span><br><span class="line">						&#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">							v.lock.unlock();</span><br><span class="line">						&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">			&#125;).start();</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">while</span>(Thread.activeCount() &gt; <span class="number">1</span>)</span><br><span class="line">			Thread.yield();</span><br><span class="line">		</span><br><span class="line">		System.out.println(v.count);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.cnblogs.com/dolphin0520/p/3920373.html" target="_blank" rel="noopener">http://www.cnblogs.com/dolphin0520/p/3920373.html</a></p>
+<p><a href="https://blog.csdn.net/gao_chun/article/details/45095995" target="_blank" rel="noopener">https://blog.csdn.net/gao_chun/article/details/45095995</a></p>
+<p><a href="https://blog.csdn.net/xilove102/article/details/52437581" target="_blank" rel="noopener">https://blog.csdn.net/xilove102/article/details/52437581</a></p>
+<blockquote>
+<p>本文原创首发于微信公众号 [ 林里少年 ]，欢迎关注第一时间获取更新。</p>
+<p><img src="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
+</blockquote>
+
+      
+
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="seaicelin 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="seaicelin 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>seaicelin</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://seaicelin.github.io/2018/06/03/Java并发编程实战-对volatile变量进行实例验证（内含源码）/" title="[Java并发编程实战]对volatile变量进行实例验证（内含源码）">https://seaicelin.github.io/2018/06/03/Java并发编程实战-对volatile变量进行实例验证（内含源码）/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/03/Java并发编程实战-共享对象之可见/" rel="next" title="[Java并发编程实战]共享对象之可见">
+                <i class="fa fa-chevron-left"></i> [Java并发编程实战]共享对象之可见
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/03/Java并发编程实战-设计线程安全的类的三个方式（含代码）/" rel="prev" title="[Java并发编程实战]设计线程安全的类的三个方式（含代码）">
+                [Java并发编程实战]设计线程安全的类的三个方式（含代码） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zNzAxOC8xMzU1NA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/touxiang.jpg"
+                alt="seaicelin" />
+            
+              <p class="site-author-name" itemprop="name">seaicelin</p>
+              <p class="site-description motion-element" itemprop="description">一个安卓通信人，专注android开发。 三观正。 <br>欢迎关注我的公众号：林里少年(id:seaicelin)<br>文章都会同步发于微信公众号!</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/seaicelin" target="_blank" title="微博"><i class="fa fa-fw fa-weibo"></i>微博</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/b3b7cf5de458" target="_blank" title="简书"><i class="fa fa-fw fa-envelope"></i>简书</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/seaicelin/activities" target="_blank" title="知乎"><i class="fa fa-fw fa-gratipay"></i>知乎</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://blog.csdn.net/amd123456789" target="_blank" title="CSDN博客"><i class="fa fa-fw fa-instagram"></i>CSDN博客</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile-之可见性验证"><span class="nav-number">1.</span> <span class="nav-text"><a href="#volatile-&#x4E4B;&#x53EF;&#x89C1;&#x6027;&#x9A8C;&#x8BC1;" class="headerlink" title="volatile &#x4E4B;&#x53EF;&#x89C1;&#x6027;&#x9A8C;&#x8BC1;"></a>volatile &#x4E4B;&#x53EF;&#x89C1;&#x6027;&#x9A8C;&#x8BC1;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile-之非原子性问题验证"><span class="nav-number">2.</span> <span class="nav-text"><a href="#volatile-&#x4E4B;&#x975E;&#x539F;&#x5B50;&#x6027;&#x95EE;&#x9898;&#x9A8C;&#x8BC1;" class="headerlink" title="volatile &#x4E4B;&#x975E;&#x539F;&#x5B50;&#x6027;&#x95EE;&#x9898;&#x9A8C;&#x8BC1;"></a>volatile &#x4E4B;&#x975E;&#x539F;&#x5B50;&#x6027;&#x95EE;&#x9898;&#x9A8C;&#x8BC1;</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x53C2;&#x8003;" class="headerlink" title="&#x53C2;&#x8003;"></a>&#x53C2;&#x8003;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">seaicelin</span>
+  
+  <div class="powered-by">
+  <i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+    本站访客数:<span id="busuanzi_value_site_uv"></span>
+  </span>
+  </div>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.4.3</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+<!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/love.js"></script>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("MR7J6sp5NKEq1IwUepvvqULV-gzGzoHsz", "YbsVhOQ0d1EoBvIjwyTmOmYT");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
