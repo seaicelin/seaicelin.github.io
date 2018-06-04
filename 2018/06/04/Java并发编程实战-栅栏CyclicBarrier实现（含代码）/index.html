@@ -119,27 +119,28 @@
 
 
 
-  <meta name="description" content="字典树，它跟我们查字典的步骤类似，打个比方，我们在查字典的时候会首先查第一个字母，然后在继续寻找第二个字母，以此类推直到找到对应的单词。 这个过程和用于字符匹配的字典树一样，假如我们在字典树第二层已经找不到第一个字母了（第一层为Root, 不用于表示字符），那么表示这个单词根本不存在字典树里；假设第一个字母找到了，那么继续在下一层寻找下一个字符，依次往下层匹配字符，直到匹配到叶子节点或者不存在。它">
+  <meta name="description" content="温故而知新，可以为师矣。—《论语》它的意思是：“温习旧知识从而得知新的理解与体会，凭借这一点就可以成为老师了  PS: 如果觉得本文有用的话，请帮忙点赞，留言评论支持一下哦，您的支持是我最大的动力！谢谢啦~   栅栏(Barrier)类似于闭锁，他能阻塞一组线程直到某个事件发生后再全部同时执行。CyclicBarrier 字面意思是回环栅栏，回环的意思是它能够被重复利用，当然前提是在所有线程释放">
+<meta name="keywords" content="CyclicBarrier">
 <meta property="og:type" content="article">
-<meta property="og:title" content="字典树">
-<meta property="og:url" content="https://seaicelin.github.io/2017/12/19/字典树/index.html">
+<meta property="og:title" content="[Java并发编程实战]栅栏CyclicBarrier实现（含代码）">
+<meta property="og:url" content="https://seaicelin.github.io/2018/06/04/Java并发编程实战-栅栏CyclicBarrier实现（含代码）/index.html">
 <meta property="og:site_name" content="seaicelin">
-<meta property="og:description" content="字典树，它跟我们查字典的步骤类似，打个比方，我们在查字典的时候会首先查第一个字母，然后在继续寻找第二个字母，以此类推直到找到对应的单词。 这个过程和用于字符匹配的字典树一样，假如我们在字典树第二层已经找不到第一个字母了（第一层为Root, 不用于表示字符），那么表示这个单词根本不存在字典树里；假设第一个字母找到了，那么继续在下一层寻找下一个字符，依次往下层匹配字符，直到匹配到叶子节点或者不存在。它">
+<meta property="og:description" content="温故而知新，可以为师矣。—《论语》它的意思是：“温习旧知识从而得知新的理解与体会，凭借这一点就可以成为老师了  PS: 如果觉得本文有用的话，请帮忙点赞，留言评论支持一下哦，您的支持是我最大的动力！谢谢啦~   栅栏(Barrier)类似于闭锁，他能阻塞一组线程直到某个事件发生后再全部同时执行。CyclicBarrier 字面意思是回环栅栏，回环的意思是它能够被重复利用，当然前提是在所有线程释放">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://img.blog.csdn.net/20171025233856747?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:image" content="http://img.blog.csdn.net/20171026213538057?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2017-12-21T17:49:37.000Z">
+<meta property="og:image" content="https://img-blog.csdn.net/20180602094724885?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2018-06-04T00:26:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="字典树">
-<meta name="twitter:description" content="字典树，它跟我们查字典的步骤类似，打个比方，我们在查字典的时候会首先查第一个字母，然后在继续寻找第二个字母，以此类推直到找到对应的单词。 这个过程和用于字符匹配的字典树一样，假如我们在字典树第二层已经找不到第一个字母了（第一层为Root, 不用于表示字符），那么表示这个单词根本不存在字典树里；假设第一个字母找到了，那么继续在下一层寻找下一个字符，依次往下层匹配字符，直到匹配到叶子节点或者不存在。它">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20171025233856747?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta name="twitter:title" content="[Java并发编程实战]栅栏CyclicBarrier实现（含代码）">
+<meta name="twitter:description" content="温故而知新，可以为师矣。—《论语》它的意思是：“温习旧知识从而得知新的理解与体会，凭借这一点就可以成为老师了  PS: 如果觉得本文有用的话，请帮忙点赞，留言评论支持一下哦，您的支持是我最大的动力！谢谢啦~   栅栏(Barrier)类似于闭锁，他能阻塞一组线程直到某个事件发生后再全部同时执行。CyclicBarrier 字面意思是回环栅栏，回环的意思是它能够被重复利用，当然前提是在所有线程释放">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20180602094724885?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 
 
 
 
 
 
-  <link rel="canonical" href="https://seaicelin.github.io/2017/12/19/字典树/"/>
+  <link rel="canonical" href="https://seaicelin.github.io/2018/06/04/Java并发编程实战-栅栏CyclicBarrier实现（含代码）/"/>
 
 
 
@@ -149,7 +150,7 @@
   };
 </script>
 
-  <title>字典树 | seaicelin</title>
+  <title>[Java并发编程实战]栅栏CyclicBarrier实现（含代码） | seaicelin</title>
   
 
 
@@ -314,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2017/12/19/字典树/">
+    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/04/Java并发编程实战-栅栏CyclicBarrier实现（含代码）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="seaicelin">
@@ -331,7 +332,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">字典树
+          <h1 class="post-title" itemprop="name headline">[Java并发编程实战]栅栏CyclicBarrier实现（含代码）
               
             
           </h1>
@@ -356,24 +357,12 @@
                 
               
 
-              <time title="创建时间：2017-12-19 23:27:42" itemprop="dateCreated datePublished" datetime="2017-12-19T23:27:42+08:00">2017-12-19</time>
+              <time title="创建时间：2018-06-04 08:24:52 / 修改时间：08:26:36" itemprop="dateCreated datePublished" datetime="2018-06-04T08:24:52+08:00">2018-06-04</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2017-12-22 01:49:37" itemprop="dateModified" datetime="2017-12-22T01:49:37+08:00">2017-12-22</time>
               
             
           </span>
@@ -386,7 +375,7 @@
 
           
           
-             <span id="/2017/12/19/字典树/" class="leancloud_visitors" data-flag-title="字典树">
+             <span id="/2018/06/04/Java并发编程实战-栅栏CyclicBarrier实现（含代码）/" class="leancloud_visitors" data-flag-title="[Java并发编程实战]栅栏CyclicBarrier实现（含代码）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -417,33 +406,31 @@
       
 
       
-        <p>字典树，它跟我们查字典的步骤类似，打个比方，我们在查字典的时候会首先查第一个字母，然后在继续寻找第二个字母，以此类推直到找到对应的单词。</p>
-<p>这个过程和用于字符匹配的字典树一样，假如我们在字典树第二层已经找不到第一个字母了（第一层为Root, 不用于表示字符），那么表示这个单词根本不存在字典树里；假设第一个字母找到了，那么继续在下一层寻找下一个字符，依次往下层匹配字符，直到匹配到叶子节点或者不存在。它是树形结构，如下图所示：</p>
-<p><img src="http://img.blog.csdn.net/20171025233856747?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
-<h2 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h2><p>以空间换时间，利用字符串的公共前缀来降低时间开销，最大限度的减少无谓的字符串比较。</p>
-<p>字典树不仅可以用来存储字符，也可以用来存储数字。</p>
-<h2 id="基本性质"><a href="#基本性质" class="headerlink" title="基本性质"></a>基本性质</h2><ul>
-<li>根节点不包含字符，除根节点以外的每个节点只表示一个字符。</li>
-<li>从根节点到某一节点，此路径上经过的节点连接起来，为该节点对应的字符串。</li>
-<li>每个节点的所有子节点表示的字符串都不相同。</li>
-</ul>
-<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><p>先给出字典表，然后在给出单词，查找单词是否在字典中。<br>刚好碰到一个题目，要求执行上面的操作。先输入5个单词存为字典，然后查找下面的2个单词是否在字典表中，存在输出 yes, 否则输出 false.</p>
-<h3 id="题目input"><a href="#题目input" class="headerlink" title="题目input:"></a>题目input:</h3><blockquote>
-<p>5<br>you<br>me<br>love<br>have<br>colorful<br>2<br>your<br>colorful</p>
+        <blockquote>
+<p>温故而知新，可以为师矣。—《论语》<br>它的意思是：“温习旧知识从而得知新的理解与体会，凭借这一点就可以成为老师了</p>
 </blockquote>
-<h3 id="output"><a href="#output" class="headerlink" title="output"></a>output</h3><blockquote>
-<p>false<br>true</p>
-</blockquote>
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ul>
-<li>先建立5个单词的字典树</li>
-<li>在字典树查找单词，通过判定节点是否存在，是否为叶子节点来确定。</li>
+<font color="blue"><em>PS: 如果觉得本文有用的话，请帮忙点赞，留言评论支持一下哦，您的支持是我最大的动力！谢谢啦~</em></font> 
+
+<p>栅栏(Barrier)类似于闭锁，<strong>他能阻塞一组线程直到某个事件发生后再全部同时执行</strong>。CyclicBarrier 字面意思是回环栅栏，回环的意思是它能够被重复利用，当然前提是在所有线程释放了以后。</p>
+<p>CyclicBarrier 和 CountDownLatch 的<strong>主要区别</strong>：</p>
+<ul>
+<li>CyclicBarrier 是所有线程必须同时到达栅栏位置，才能继续执行。<strong>它用于等待其他线程，并且能够重置使用</strong>。</li>
+<li>CountDownLatch <strong>用于等待事件，是一次性对象，一旦进入终止状态，就不能被重置</strong>。</li>
+<li>CountDownLatch 通常阻塞的是主线程，开锁以后主线程才继续执行。 </li>
+<li>CyclicBarrier 阻塞的是子线程，到达栅栏位置后，每个线程还可以继续做自己后续的事情。</li>
 </ul>
-<h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">const int SIZE = 26; //26个字母</span><br><span class="line"></span><br><span class="line">//字典树结构体</span><br><span class="line">typedef struct Node_</span><br><span class="line">&#123;</span><br><span class="line"> bool isLeaf;        //是否为叶子节点</span><br><span class="line"> Node_ *child[SIZE]; //每个字符的表示</span><br><span class="line">&#125;Node;</span><br><span class="line"></span><br><span class="line">Node tree[10000];</span><br><span class="line"></span><br><span class="line">//获取字符串长度</span><br><span class="line">int getLen(char *s)</span><br><span class="line">&#123;</span><br><span class="line">   int ret = 0;</span><br><span class="line">   while(s[ret]) ret++;</span><br><span class="line">   return ret;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//初始化tree数组，每个孩子都为空，表示当前还是空树</span><br><span class="line">void init()</span><br><span class="line">&#123;</span><br><span class="line">  for(int i = 0; i &lt; 10000; i++)</span><br><span class="line">  &#123;</span><br><span class="line">     for(int j = 0; j &lt; SIZE; j++)</span><br><span class="line">     &#123;</span><br><span class="line">         tree[i].isLeaf = false;</span><br><span class="line">         tree[i].child[j] = NULL;</span><br><span class="line">     &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line"> init();</span><br><span class="line"> </span><br><span class="line"> int num;</span><br><span class="line"> scanf(&quot;%d&quot;, &amp;num);</span><br><span class="line"> </span><br><span class="line"> int cnt = 0;</span><br><span class="line"> Node *root = &amp;tree[cnt++]; //根节点不表示字符</span><br><span class="line"> </span><br><span class="line"> char c[21];</span><br><span class="line"></span><br><span class="line"> for(int i = 0; i &lt; num; i++)</span><br><span class="line"> &#123;</span><br><span class="line">     scanf(&quot;%s&quot;, c);</span><br><span class="line">     int len = getLen(c);</span><br><span class="line">     </span><br><span class="line">     //建立字典树</span><br><span class="line">     Node* p = root;</span><br><span class="line">     for(int j = 0; j &lt; len; j++)</span><br><span class="line">     &#123;</span><br><span class="line">         int index = c[j] - &apos;a&apos;;         //表示对应的字符</span><br><span class="line">         if(p-&gt;child[index] == NULL)</span><br><span class="line">             p-&gt;child[index] = &amp;tree[cnt++]; //为字符分配地址</span><br><span class="line">         p = p-&gt;child[index];</span><br><span class="line">     &#125;</span><br><span class="line">     p-&gt;isLeaf = true;//当前节点为根节点，用于判断是否存在于字典树中</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> int T;</span><br><span class="line"> scanf(&quot;%d&quot;, &amp;T);</span><br><span class="line"> </span><br><span class="line"> for(int i = 0; i &lt; T; i++)</span><br><span class="line"> &#123;</span><br><span class="line">     scanf(&quot;%s&quot;, c);</span><br><span class="line">     int len = getLen(c);</span><br><span class="line">     </span><br><span class="line">     int count = 0;</span><br><span class="line">     int index;</span><br><span class="line">     </span><br><span class="line">     //查询字典树</span><br><span class="line">     Node* p = root;</span><br><span class="line">     while(p &amp;&amp; count &lt; len)</span><br><span class="line">     &#123;</span><br><span class="line">         index = c[count] - &apos;a&apos;;//对应字符</span><br><span class="line">         p = p-&gt;child[index];//对应的字符有分配地址，表示匹配到</span><br><span class="line">         count++;</span><br><span class="line">     &#125;</span><br><span class="line">     </span><br><span class="line"></span><br><span class="line">     if(p &amp;&amp; p-&gt;isLeaf)//节点存在并且为叶子节点，说明在字典树中存在这个单词</span><br><span class="line">         printf(&quot;#%d true&quot;, i+1);</span><br><span class="line">     else</span><br><span class="line">         printf(&quot;#%d false&quot;, i+1);</span><br><span class="line"></span><br><span class="line">     printf(&quot;\n&quot;);</span><br><span class="line"> &#125;</span><br><span class="line"> return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://zh.wikipedia.org/wiki/Trie" target="_blank" rel="noopener">维基百科 Trie</a></p>
+<h2 id="CyclicBarrier-的核心方法"><a href="#CyclicBarrier-的核心方法" class="headerlink" title="CyclicBarrier 的核心方法"></a>CyclicBarrier 的核心方法</h2><p>首先，看它的构造函数，有两个构造函数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//构造函数一</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">CyclicBarrier</span><span class="params">(<span class="keyword">int</span> parties, Runnable barrierAction)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (parties &lt;= <span class="number">0</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">       <span class="keyword">this</span>.parties = parties;</span><br><span class="line">       <span class="keyword">this</span>.count = parties;</span><br><span class="line">       <span class="keyword">this</span>.barrierCommand = barrierAction;</span><br><span class="line">   &#125;</span><br><span class="line"><span class="comment">//构造函数二</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">CyclicBarrier</span><span class="params">(<span class="keyword">int</span> parties)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>(parties, <span class="keyword">null</span>);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>参数 parties 表示参与的线程或者任务有多少个。 参数 barrierAction 是在 parties 个线程都到达 barrier 状态后，才会去执行，它是在一个已有的子任务线程中执行。</p>
+<p>其次，它的主要方法是 await()，同样也有两个版本：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException, BrokenBarrierException </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> dowait(<span class="keyword">false</span>, <span class="number">0L</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (TimeoutException toe) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Error(toe); <span class="comment">// cannot happen</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">await</span><span class="params">(<span class="keyword">long</span> timeout, TimeUnit unit)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> InterruptedException,</span></span><br><span class="line"><span class="function">           BrokenBarrierException,</span></span><br><span class="line"><span class="function">           TimeoutException </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> dowait(<span class="keyword">true</span>, unit.toNanos(timeout));</span><br><span class="line">&#125;</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">第一个方法比较常用，它用来阻塞当前线程，直至所有的线程到达 barrier 状态才继续执行。</span><br><span class="line">第二个方法顾名思义，如果有某个线程超时还没到达 barrier 状态，将会抛出 BrokenBarrierException</span><br><span class="line"> 异常，并且其他已经到达的线程继续执行后续任务。</span><br><span class="line"></span><br><span class="line">##应用场景</span><br><span class="line">**所有的子任务（子线程）需要在到达某个状态前挂起，直到所有的子任务（子线程）都到达栅栏状态时，它们才能继续执行下一步操作，这个时候就可以选择使用CyclicBarrier**。</span><br><span class="line"></span><br><span class="line">来看一个简单的例子：</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.BrokenBarrierException;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.CyclicBarrier;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CyclicBarrierTest</span></span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SIZE = <span class="number">5</span>; <span class="comment">//创建子线程的数量</span></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">//创建关卡对象</span></span><br><span class="line">		CyclicBarrier cb = <span class="keyword">new</span> CyclicBarrier(SIZE, <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				System.out.println(Thread.currentThread().getName() + <span class="string">":"</span> + <span class="string">" all sub thead end"</span>);<span class="comment">//所有子线程执行完毕时执行</span></span><br><span class="line">			&#125;&#125;);</span><br><span class="line">		<span class="comment">//创建并启动五个子线程</span></span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; SIZE; i++) &#123;</span><br><span class="line">			<span class="keyword">new</span> Thread(<span class="keyword">new</span> SubThread(cb)).start();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SubThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">private</span> CyclicBarrier cb; <span class="comment">//栅栏对象</span></span><br><span class="line">		</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="title">SubThread</span><span class="params">(CyclicBarrier cb)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.cb = cb;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">			<span class="comment">//当前线程开始运行</span></span><br><span class="line">			System.out.println(Thread.currentThread().getName() + <span class="string">": sub thread starting running"</span>);</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				cb.await();<span class="comment">//计数器加1，等待其他线程执行到同样的地方</span></span><br><span class="line">				<span class="comment">//子线程全部继续执行</span></span><br><span class="line">				System.out.println(Thread.currentThread().getName() + <span class="string">":"</span> +<span class="string">" all sub thread start doing other things"</span>);</span><br><span class="line">			&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">				<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125; <span class="keyword">catch</span> (BrokenBarrierException e) &#123;</span><br><span class="line">				<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果是：<br><img src="https://img-blog.csdn.net/20180602094724885?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+<p>看打印的 log，可以清楚的显示他们的工作流程了。首先五个线程开始执行直接进入阻塞状态，接着，所有线程到达栅栏状态；然后任意一个线程去运行 CyclicBarrier 的 runnable 参数。这个时候，所有子线程并没有释放，运行完 runnable，五个线程将会继续执行，处理各自的事物。</p>
+<p>没有什么比自己写代码来验证更清晰的了。</p>
+<p>本文完结，如对你有帮助，欢迎关注我，谢谢啦~</p>
 <blockquote>
-<p>本文原创首发于微信公众号 [ 林里少年 ]，欢迎关注第一时间获取更新。 </p>
+<p><font color="blue">本文原创首发于微信公众号 [ 林里少年], id(seaicelin)，欢迎关注第一时间获取更新。</font><br><img src="http://img.blog.csdn.net/20171024234432264?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt=""></p>
 </blockquote>
-<p><img src="http://img.blog.csdn.net/20171026213538057?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvYW1kMTIzNDU2Nzg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="这里写图片描述"></p>
 
       
 
@@ -495,7 +482,7 @@
     <strong>本文作者： </strong>seaicelin</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://seaicelin.github.io/2017/12/19/字典树/" title="字典树">https://seaicelin.github.io/2017/12/19/字典树/</a>
+    <a href="https://seaicelin.github.io/2018/06/04/Java并发编程实战-栅栏CyclicBarrier实现（含代码）/" title="[Java并发编程实战]栅栏CyclicBarrier实现（含代码）">https://seaicelin.github.io/2018/06/04/Java并发编程实战-栅栏CyclicBarrier实现（含代码）/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -505,6 +492,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CyclicBarrier/" rel="tag"># CyclicBarrier</a>
+          
+        </div>
       
 
       
@@ -530,15 +523,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/06/03/六月第一跑/" rel="next" title="六月第一跑">
+                <i class="fa fa-chevron-left"></i> 六月第一跑
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/02/Java并发编程实战-简介/" rel="prev" title="[Java并发编程实战]简介">
-                [Java并发编程实战]简介 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -732,7 +725,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心思想"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x6838;&#x5FC3;&#x601D;&#x60F3;" class="headerlink" title="&#x6838;&#x5FC3;&#x601D;&#x60F3;"></a>&#x6838;&#x5FC3;&#x601D;&#x60F3;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本性质"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x57FA;&#x672C;&#x6027;&#x8D28;" class="headerlink" title="&#x57FA;&#x672C;&#x6027;&#x8D28;"></a>&#x57FA;&#x672C;&#x6027;&#x8D28;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x5E94;&#x7528;" class="headerlink" title="&#x5E94;&#x7528;"></a>&#x5E94;&#x7528;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目input"><span class="nav-number">3.1.</span> <span class="nav-text"><a href="#&#x9898;&#x76EE;input" class="headerlink" title="&#x9898;&#x76EE;input:"></a>&#x9898;&#x76EE;input:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#output"><span class="nav-number">3.2.</span> <span class="nav-text"><a href="#output" class="headerlink" title="output"></a>output</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">3.3.</span> <span class="nav-text"><a href="#&#x601D;&#x8DEF;" class="headerlink" title="&#x601D;&#x8DEF;"></a>&#x601D;&#x8DEF;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源码"><span class="nav-number">3.4.</span> <span class="nav-text"><a href="#&#x6E90;&#x7801;" class="headerlink" title="&#x6E90;&#x7801;"></a>&#x6E90;&#x7801;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x53C2;&#x8003;" class="headerlink" title="&#x53C2;&#x8003;"></a>&#x53C2;&#x8003;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CyclicBarrier-的核心方法"><span class="nav-number">1.</span> <span class="nav-text"><a href="#CyclicBarrier-&#x7684;&#x6838;&#x5FC3;&#x65B9;&#x6CD5;" class="headerlink" title="CyclicBarrier &#x7684;&#x6838;&#x5FC3;&#x65B9;&#x6CD5;"></a>CyclicBarrier &#x7684;&#x6838;&#x5FC3;&#x65B9;&#x6CD5;</span></a></li></ol></div>
             
 
           </div>
