@@ -311,7 +311,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/">
+    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/26/Java并发编程-Executor框架几个常见的实现类介绍/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="seaicelin">
@@ -330,8 +330,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/" itemprop="url">
-                  未命名
+                <a class="post-title-link" href="/2018/06/26/Java并发编程-Executor框架几个常见的实现类介绍/" itemprop="url">
+                  Java并发编程-Executor框架几个常见的实现类介绍
                 </a>
               
             
@@ -357,9 +357,13 @@
                 
               
 
-              <time title="创建时间：2018-06-26 21:24:28" itemprop="dateCreated datePublished" datetime="2018-06-26T21:24:28+08:00">2018-06-26</time>
+              <time title="创建时间：2018-06-26 21:34:21 / 修改时间：21:35:30" itemprop="dateCreated datePublished" datetime="2018-06-26T21:34:21+08:00">2018-06-26</time>
             
 
+            
+              
+
+              
             
           </span>
 
@@ -371,7 +375,7 @@
 
           
           
-             <span id="/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/" class="leancloud_visitors" data-flag-title="">
+             <span id="/2018/06/26/Java并发编程-Executor框架几个常见的实现类介绍/" class="leancloud_visitors" data-flag-title="Java并发编程-Executor框架几个常见的实现类介绍">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -405,14 +409,14 @@
         
           
           
-燕雀安知鸿鹄之志?———《史记·陈涉世家》意思是燕雀怎么能知道鸿鹄的远大志向，比喻平凡的人哪里知道英雄人物的志向。
+不鸣则已，一鸣惊人。——《史记·滑稽列传》
 
-前文说了 Exectuor 的具体用法，却没有说到如何停止一
+上一篇文章已经讲了 Executor 的整体框架，其中有提到它的执行示意流程图。这篇文章就介绍几个常见的实现类的原理和用法，最后通过
           ...
           <!--noindex-->
 
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/" rel="contents">
+            <a class="btn" href="/2018/06/26/Java并发编程-Executor框架几个常见的实现类介绍/" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -469,7 +473,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/26/Java并发编程-Executor框架几个常见的实现类介绍(含示例代码)/">
+    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="seaicelin">
@@ -488,8 +492,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/26/Java并发编程-Executor框架几个常见的实现类介绍(含示例代码)/" itemprop="url">
-                  未命名
+                <a class="post-title-link" href="/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/" itemprop="url">
+                  Java并发编程实战-管理Executor生命周期的几个方法
                 </a>
               
             
@@ -515,9 +519,13 @@
                 
               
 
-              <time title="创建时间：2018-06-26 21:21:15" itemprop="dateCreated datePublished" datetime="2018-06-26T21:21:15+08:00">2018-06-26</time>
+              <time title="创建时间：2018-06-26 21:33:30 / 修改时间：21:36:22" itemprop="dateCreated datePublished" datetime="2018-06-26T21:33:30+08:00">2018-06-26</time>
             
 
+            
+              
+
+              
             
           </span>
 
@@ -529,7 +537,7 @@
 
           
           
-             <span id="/2018/06/26/Java并发编程-Executor框架几个常见的实现类介绍(含示例代码)/" class="leancloud_visitors" data-flag-title="">
+             <span id="/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/" class="leancloud_visitors" data-flag-title="Java并发编程实战-管理Executor生命周期的几个方法">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -563,14 +571,14 @@
         
           
           
-不鸣则已，一鸣惊人。——《史记·滑稽列传》
+燕雀安知鸿鹄之志?———《史记·陈涉世家》意思是燕雀怎么能知道鸿鹄的远大志向，比喻平凡的人哪里知道英雄人物的志向。
 
-上一篇文章已经讲了 Executor 的整体框架，其中有提到它的执行示意流程图。这篇文章就介绍几个常见的实现类的原理和用法，最后通过
+前文说了 Exectuor 的具体用法，却没有说到如何停止一
           ...
           <!--noindex-->
 
           <div class="post-button text-center">
-            <a class="btn" href="/2018/06/26/Java并发编程-Executor框架几个常见的实现类介绍(含示例代码)/" rel="contents">
+            <a class="btn" href="/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1989,7 +1997,9 @@ Java5.0 增加了两种新的容器类型，它们是指：Queue 和 BlockingQue
                     
                       
                     
-                    <span class="site-state-item-count">6</span>
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

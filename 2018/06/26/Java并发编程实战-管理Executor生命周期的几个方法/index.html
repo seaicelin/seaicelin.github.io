@@ -120,17 +120,18 @@
 
 
   <meta name="description" content="燕雀安知鸿鹄之志?———《史记·陈涉世家》意思是燕雀怎么能知道鸿鹄的远大志向，比喻平凡的人哪里知道英雄人物的志向。  前文说了 Exectuor 的具体用法，却没有说到如何停止一个任务的执行。所以，本篇文章就来讲解一下 Executor 的生命周期管理。 首先，看下这个框架生命周期相关的主要方法。 12345void shutdown();//平缓关闭List&amp;lt;Runnable&amp;gt; s">
+<meta name="keywords" content="Executor">
 <meta property="og:type" content="article">
-<meta property="og:title" content="seaicelin">
+<meta property="og:title" content="Java并发编程实战-管理Executor生命周期的几个方法">
 <meta property="og:url" content="https://seaicelin.github.io/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/index.html">
 <meta property="og:site_name" content="seaicelin">
 <meta property="og:description" content="燕雀安知鸿鹄之志?———《史记·陈涉世家》意思是燕雀怎么能知道鸿鹄的远大志向，比喻平凡的人哪里知道英雄人物的志向。  前文说了 Exectuor 的具体用法，却没有说到如何停止一个任务的执行。所以，本篇文章就来讲解一下 Executor 的生命周期管理。 首先，看下这个框架生命周期相关的主要方法。 12345void shutdown();//平缓关闭List&amp;lt;Runnable&amp;gt; s">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://img-blog.csdn.net/20180625213526787?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 <meta property="og:image" content="https://img-blog.csdn.net/2018062521353737?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:updated_time" content="2018-06-26T13:24:28.000Z">
+<meta property="og:updated_time" content="2018-06-26T13:36:22.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="seaicelin">
+<meta name="twitter:title" content="Java并发编程实战-管理Executor生命周期的几个方法">
 <meta name="twitter:description" content="燕雀安知鸿鹄之志?———《史记·陈涉世家》意思是燕雀怎么能知道鸿鹄的远大志向，比喻平凡的人哪里知道英雄人物的志向。  前文说了 Exectuor 的具体用法，却没有说到如何停止一个任务的执行。所以，本篇文章就来讲解一下 Executor 的生命周期管理。 首先，看下这个框架生命周期相关的主要方法。 12345void shutdown();//平缓关闭List&amp;lt;Runnable&amp;gt; s">
 <meta name="twitter:image" content="https://img-blog.csdn.net/20180625213526787?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 
@@ -149,7 +150,7 @@
   };
 </script>
 
-  <title> | seaicelin</title>
+  <title>Java并发编程实战-管理Executor生命周期的几个方法 | seaicelin</title>
   
 
 
@@ -331,7 +332,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
+          <h1 class="post-title" itemprop="name headline">Java并发编程实战-管理Executor生命周期的几个方法
               
             
           </h1>
@@ -356,9 +357,13 @@
                 
               
 
-              <time title="创建时间：2018-06-26 21:24:28" itemprop="dateCreated datePublished" datetime="2018-06-26T21:24:28+08:00">2018-06-26</time>
+              <time title="创建时间：2018-06-26 21:33:30 / 修改时间：21:36:22" itemprop="dateCreated datePublished" datetime="2018-06-26T21:33:30+08:00">2018-06-26</time>
             
 
+            
+              
+
+              
             
           </span>
 
@@ -370,7 +375,7 @@
 
           
           
-             <span id="/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/" class="leancloud_visitors" data-flag-title="">
+             <span id="/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/" class="leancloud_visitors" data-flag-title="Java并发编程实战-管理Executor生命周期的几个方法">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -510,7 +515,7 @@
     <strong>本文作者： </strong>seaicelin</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://seaicelin.github.io/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/" title="">https://seaicelin.github.io/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/</a>
+    <a href="https://seaicelin.github.io/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/" title="Java并发编程实战-管理Executor生命周期的几个方法">https://seaicelin.github.io/2018/06/26/Java并发编程实战-管理Executor生命周期的几个方法/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -520,6 +525,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Executor/" rel="tag"># Executor</a>
+          
+        </div>
       
 
       
@@ -545,8 +556,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/26/Java并发编程-Executor框架几个常见的实现类介绍(含示例代码)/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2018/06/05/Java并发编程-用信号量Semaphore实现一个消息池（含代码）/" rel="next" title="[Java并发编程]用信号量Semaphore实现一个消息池（含代码）">
+                <i class="fa fa-chevron-left"></i> [Java并发编程]用信号量Semaphore实现一个消息池（含代码）
               </a>
             
           </div>
@@ -554,6 +565,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/26/Java并发编程-Executor框架几个常见的实现类介绍/" rel="prev" title="Java并发编程-Executor框架几个常见的实现类介绍">
+                Java并发编程-Executor框架几个常见的实现类介绍 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -680,7 +695,9 @@ var jiathis_config={
                     
                       
                     
-                    <span class="site-state-item-count">6</span>
+                      
+                    
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
