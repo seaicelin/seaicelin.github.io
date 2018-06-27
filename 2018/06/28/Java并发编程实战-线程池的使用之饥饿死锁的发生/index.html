@@ -119,28 +119,28 @@
 
 
 
-  <meta name="description" content="今天是儿童节，本大叔本想趁着这节日找几个朋友聚聚，到市区浪一浪，吃个牛肉火锅，或者木屋烧烤，喝上几杯小酒什么的，享受一下美好的广州夜生活。但是摸了摸日渐微胖的肚子，还是把持住了，老老实实呆在家吧。 想起来，距离上次跑步有半个多月了，中间几次想坚持锻炼一下，结果是一次又一次的借口，愣是没有跑成。不行，今晚必须出去跑一跑，减减压，出出汗，享受美好月光。 抬起脚，迈开跑，一路风景。路过红色公交站台，路过">
-<meta name="keywords" content="心路历程">
+  <meta name="description" content="一屋不扫何以扫天下?———《后汉书·陈蕃传》这句话的意思是，从一点一滴的小事开始积累，才能做成一番大事业。  Executor框架核心之一就是利用线程池，所以接下来这几篇，详细介绍线程池相关的高级选项以及注意事项。 任务间隐性耦合的说明虽说 Exectuor 将任务和执行策略解耦，但是实际上言过其实了。假如任务之间存在某种相互依赖关系，其中一个任务必须依赖另外一个的执行，这就又产生某种程度上的耦">
+<meta name="keywords" content="饥饿死锁">
 <meta property="og:type" content="article">
-<meta property="og:title" content="六月第一跑">
-<meta property="og:url" content="https://seaicelin.github.io/2018/06/03/六月第一跑/index.html">
+<meta property="og:title" content="[Java并发编程实战]线程池的使用之饥饿死锁的发生">
+<meta property="og:url" content="https://seaicelin.github.io/2018/06/28/Java并发编程实战-线程池的使用之饥饿死锁的发生/index.html">
 <meta property="og:site_name" content="seaicelin">
-<meta property="og:description" content="今天是儿童节，本大叔本想趁着这节日找几个朋友聚聚，到市区浪一浪，吃个牛肉火锅，或者木屋烧烤，喝上几杯小酒什么的，享受一下美好的广州夜生活。但是摸了摸日渐微胖的肚子，还是把持住了，老老实实呆在家吧。 想起来，距离上次跑步有半个多月了，中间几次想坚持锻炼一下，结果是一次又一次的借口，愣是没有跑成。不行，今晚必须出去跑一跑，减减压，出出汗，享受美好月光。 抬起脚，迈开跑，一路风景。路过红色公交站台，路过">
+<meta property="og:description" content="一屋不扫何以扫天下?———《后汉书·陈蕃传》这句话的意思是，从一点一滴的小事开始积累，才能做成一番大事业。  Executor框架核心之一就是利用线程池，所以接下来这几篇，详细介绍线程池相关的高级选项以及注意事项。 任务间隐性耦合的说明虽说 Exectuor 将任务和执行策略解耦，但是实际上言过其实了。假如任务之间存在某种相互依赖关系，其中一个任务必须依赖另外一个的执行，这就又产生某种程度上的耦">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://img-blog.csdn.net/2018060123281559?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:image" content="https://img-blog.csdn.net/20180601233137994?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:updated_time" content="2018-06-03T03:33:05.000Z">
+<meta property="og:image" content="https://img-blog.csdn.net/20180626234359315?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180626234827203?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:updated_time" content="2018-06-27T23:45:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="六月第一跑">
-<meta name="twitter:description" content="今天是儿童节，本大叔本想趁着这节日找几个朋友聚聚，到市区浪一浪，吃个牛肉火锅，或者木屋烧烤，喝上几杯小酒什么的，享受一下美好的广州夜生活。但是摸了摸日渐微胖的肚子，还是把持住了，老老实实呆在家吧。 想起来，距离上次跑步有半个多月了，中间几次想坚持锻炼一下，结果是一次又一次的借口，愣是没有跑成。不行，今晚必须出去跑一跑，减减压，出出汗，享受美好月光。 抬起脚，迈开跑，一路风景。路过红色公交站台，路过">
-<meta name="twitter:image" content="https://img-blog.csdn.net/2018060123281559?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta name="twitter:title" content="[Java并发编程实战]线程池的使用之饥饿死锁的发生">
+<meta name="twitter:description" content="一屋不扫何以扫天下?———《后汉书·陈蕃传》这句话的意思是，从一点一滴的小事开始积累，才能做成一番大事业。  Executor框架核心之一就是利用线程池，所以接下来这几篇，详细介绍线程池相关的高级选项以及注意事项。 任务间隐性耦合的说明虽说 Exectuor 将任务和执行策略解耦，但是实际上言过其实了。假如任务之间存在某种相互依赖关系，其中一个任务必须依赖另外一个的执行，这就又产生某种程度上的耦">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20180626234359315?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 
 
 
 
 
 
-  <link rel="canonical" href="https://seaicelin.github.io/2018/06/03/六月第一跑/"/>
+  <link rel="canonical" href="https://seaicelin.github.io/2018/06/28/Java并发编程实战-线程池的使用之饥饿死锁的发生/"/>
 
 
 
@@ -150,7 +150,7 @@
   };
 </script>
 
-  <title>六月第一跑 | seaicelin</title>
+  <title>[Java并发编程实战]线程池的使用之饥饿死锁的发生 | seaicelin</title>
   
 
 
@@ -315,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/03/六月第一跑/">
+    <link itemprop="mainEntityOfPage" href="https://seaicelin.github.io/2018/06/28/Java并发编程实战-线程池的使用之饥饿死锁的发生/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="seaicelin">
@@ -332,7 +332,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">六月第一跑
+          <h1 class="post-title" itemprop="name headline">[Java并发编程实战]线程池的使用之饥饿死锁的发生
               
             
           </h1>
@@ -357,7 +357,7 @@
                 
               
 
-              <time title="创建时间：2018-06-03 11:22:46 / 修改时间：11:33:05" itemprop="dateCreated datePublished" datetime="2018-06-03T11:22:46+08:00">2018-06-03</time>
+              <time title="创建时间：2018-06-28 07:44:10 / 修改时间：07:45:00" itemprop="dateCreated datePublished" datetime="2018-06-28T07:44:10+08:00">2018-06-28</time>
             
 
             
@@ -375,7 +375,7 @@
 
           
           
-             <span id="/2018/06/03/六月第一跑/" class="leancloud_visitors" data-flag-title="六月第一跑">
+             <span id="/2018/06/28/Java并发编程实战-线程池的使用之饥饿死锁的发生/" class="leancloud_visitors" data-flag-title="[Java并发编程实战]线程池的使用之饥饿死锁的发生">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -406,17 +406,40 @@
       
 
       
-        <p><img src="https://img-blog.csdn.net/2018060123281559?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"><br>今天是儿童节，本大叔本想趁着这节日找几个朋友聚聚，到市区浪一浪，吃个牛肉火锅，或者木屋烧烤，喝上几杯小酒什么的，享受一下美好的广州夜生活。但是摸了摸日渐微胖的肚子，还是把持住了，老老实实呆在家吧。</p>
-<p>想起来，距离上次跑步有半个多月了，中间几次想坚持锻炼一下，结果是一次又一次的借口，愣是没有跑成。不行，今晚必须出去跑一跑，减减压，出出汗，享受美好月光。</p>
-<p>抬起脚，迈开跑，一路风景。路过红色公交站台，路过市民广场，路过广场舞大妈，路过公园的小湖，路过一大片野花，路过路灯下一颗又一颗树的影子，路过自己的思绪…</p>
-<p>跑步是孤独无聊的，但却很安心，让我有空去想想最近的工作生活，反思最近做了些什么。</p>
-<p>毫无疑问，我给自己设下的五月份目标到现在为止还没有完成。我本来是计划五月份把『Java 并发编程』相关文章全部写完，并做一个总结。然而现在看来，离计划设定的目标还差很远，第一部分的基础知识才基本更完，还剩下大头的第二部分没开始。所以六月份要给力一点了，给自己定个小目标：</p>
-<p>「<strong>六月十五号前，写完并发编程全部文章，持续更新到我的公众号。</strong>」</p>
-<p>跟着风跑着，脑袋越来越放空，所有的杂念烟消云散。身体不断地推着灵魂前进，甩掉一身疲惫。渐渐地慢了下来，腿软软的，热热的，人也轻飘飘的，小目标再次定下来，这感觉就是痛快。</p>
-<p>是谁说的，跑步，大概是最完美的独角戏了。太他么能装逼了。</p>
-<p>五月第一跑之后，唯一坚持做到的事就是王者农药再也没有碰过！这农药确实太毒了，坚决不能再碰。</p>
-<p>六月第一跑，新的开始，加油吧，少年！<br>后天继续更新公众号，欢迎关注！</p>
-<p>今晚的跑步图，谢谢阅读~<br><img src="https://img-blog.csdn.net/20180601233137994?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p>
+        <blockquote>
+<p>一屋不扫何以扫天下?———《后汉书·陈蕃传》<br>这句话的意思是，从一点一滴的小事开始积累，才能做成一番大事业。</p>
+</blockquote>
+<p>Executor框架核心之一就是利用线程池，所以接下来这几篇，详细介绍线程池相关的高级选项以及注意事项。</p>
+<h2 id="任务间隐性耦合的说明"><a href="#任务间隐性耦合的说明" class="headerlink" title="任务间隐性耦合的说明"></a>任务间隐性耦合的说明</h2><p>虽说 Exectuor 将任务和执行策略解耦，但是实际上言过其实了。假如任务之间存在某种相互依赖关系，其中一个任务必须依赖另外一个的执行，这就又产生某种程度上的耦合。像这些类型的任务，我们需要注意，需要明确地指定一个执行策略。比如下面这些任务都是需要注意的：</p>
+<ul>
+<li><p><strong>依赖性任务</strong>：任务之间相互依赖，隐形地给执行策略带来了约束，这样要求我们必须仔细的管理执行策略避免活跃度问题。比如，一个任务需等待另外一个耗时任务或者相互等待了，会产生什么样的结果？</p>
+</li>
+<li><p><strong>采用线程限制的任务</strong></p>
+</li>
+<li><strong>对响应时间敏感的任务</strong>：将一个耗时的任务提交到单线程化的 Executor 中，或者将多个耗时的任务提交到只包含少量线程的线程池中，会削弱由 Executor 管理的服务的响应性。</li>
+<li><strong>使用 ThreadLocal 的任务</strong>：ThreadLocal 让每个线程可以保留一份变量的私有版本。Executor的是实现是：在需求不高时回收空闲线程，需求增加时添加新的线程，如果任务抛出异常，就会用一个全新的线程取代出错的那个。所以，只有当 ThreadLocal 值的生命周期被限制在当前任务中时，在池的某线程中使用 ThreadLocal 才有意义。在线程池中，不应该使用 ThreadLocal 传递任务间的数值。</li>
+</ul>
+<p>所以结论就是，当任务是同类的，独立的时候，线程池才会发挥出最佳的作用。</p>
+<p>另外：</p>
+<ul>
+<li><p><strong>如果将耗时的任务和短时任务混合在一起，除非线程池很大，否则会出现线程池拥堵，拖长服务时间，最差的情况是所有线程任务都在执行耗时任务。</strong></p>
+</li>
+<li><p><strong>如果提交的任务依赖于其他任务，除非线程池是无限的，否则会有产生死锁的风险。</strong></p>
+</li>
+</ul>
+<h2 id="线程饥饿死锁概念"><a href="#线程饥饿死锁概念" class="headerlink" title="线程饥饿死锁概念"></a>线程饥饿死锁概念</h2><p>在线程池中如果一个任务依赖于其他任务的执行，就可能产生死锁。在一个大的线程池中，如果所有线程执行的任务都阻塞在线程池中，等待着仍然处于同一队列中的其他任务，那么这就会发生线程饥饿死锁。换句话说，<strong>只要池任务开始了无限期阻塞，其目的是等待一些资源或条件，此时只有另一个池任务的执行才能使那些条件成立。除非能保证线程池足够大，否则会发生线程饥饿死锁</strong>。</p>
+<p>下面举个线程饥饿死锁的，创建只有一个线程的线程池，用于串行执行任务。创建两个任务 Task1 和 Task2，其中 Task1 从队列中取出元素， Task2 向队列添加元素。其中，队列为阻塞队列，当队列为空时，Task1 将会一直阻塞等待 Task2 执行，但是此时只有一个线程只能执行一个任务，所以这个 Task1 将会永远阻塞，Task2 将永远无法执行。这就是任务之间相互依赖的饥饿死锁。</p>
+<p>代码清单如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.ArrayBlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.BlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Callable;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ExecutorService;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadDeadLockTest</span></span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//创建一个阻塞队列</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> BlockingQueue Q = <span class="keyword">new</span> ArrayBlockingQueue(<span class="number">10</span>);</span><br><span class="line">	<span class="comment">//线程池线程数量</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> THREAD_SIZE = <span class="number">1</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">//创建一个固定线程的线程池</span></span><br><span class="line">		ExecutorService service = Executors.newFixedThreadPool(THREAD_SIZE); </span><br><span class="line">		service.submit(<span class="keyword">new</span> Task1());</span><br><span class="line">		service.submit(<span class="keyword">new</span> Task2(<span class="number">1</span>));</span><br><span class="line">		service.shutdown();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//任务1取出阻塞队列的值并打印</span></span><br><span class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Task1</span> <span class="keyword">implements</span> <span class="title">Callable</span> </span>&#123;</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> Object <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">			System.out.println(<span class="string">"Task1 is running"</span>);</span><br><span class="line">			<span class="comment">//取出阻塞队列的值，如果没有则会阻塞</span></span><br><span class="line">			<span class="keyword">int</span> value = (<span class="keyword">int</span>) Q.take();</span><br><span class="line">			System.out.println(<span class="string">"Task1 finished, value = "</span> + value);</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//任务2，往阻塞队列增加元素</span></span><br><span class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Task2</span> <span class="keyword">implements</span> <span class="title">Callable</span> </span>&#123;</span><br><span class="line">		<span class="keyword">private</span> <span class="keyword">int</span> val;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="title">Task2</span><span class="params">(<span class="keyword">int</span> value)</span> </span>&#123;</span><br><span class="line">			val = value;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> Object <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">			System.out.println(<span class="string">"Task2 put value = "</span> + val);</span><br><span class="line">			<span class="comment">//往阻塞队列增加元素</span></span><br><span class="line">			Q.put(<span class="number">1</span>);</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<p><img src="https://img-blog.csdn.net/20180626234359315?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt=""></p>
+<p>从这里看出，Task1 一直在运行并且没有结束，Task2 永远无法执行。这个例子就简单的说明了饥饿死锁发生的情况。</p>
+<p>上面也说过，除非线程池足够大，才能避免饥饿死锁的发生。所以，我们把上面的代码的线程数量改为2：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">THREAD_SIZE = <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<p>执行结果如下：</p>
+<p><img src="https://img-blog.csdn.net/20180626234827203?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtZDEyMzQ1Njc4OQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt=""></p>
+<p>运行结果正常，不会发生饥饿死锁啦，因为线程池足够大。</p>
+<p>本文完结。</p>
 
       
 
@@ -468,7 +491,7 @@
     <strong>本文作者： </strong>seaicelin</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://seaicelin.github.io/2018/06/03/六月第一跑/" title="六月第一跑">https://seaicelin.github.io/2018/06/03/六月第一跑/</a>
+    <a href="https://seaicelin.github.io/2018/06/28/Java并发编程实战-线程池的使用之饥饿死锁的发生/" title="[Java并发编程实战]线程池的使用之饥饿死锁的发生">https://seaicelin.github.io/2018/06/28/Java并发编程实战-线程池的使用之饥饿死锁的发生/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -481,7 +504,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/心路历程/" rel="tag"># 心路历程</a>
+            <a href="/tags/饥饿死锁/" rel="tag"># 饥饿死锁</a>
           
         </div>
       
@@ -509,8 +532,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/03/Java并发编程实战-闭锁CountDownLatch实现（含代码）/" rel="next" title="[Java并发编程实战]闭锁CountDownLatch实现（含代码）">
-                <i class="fa fa-chevron-left"></i> [Java并发编程实战]闭锁CountDownLatch实现（含代码）
+              <a href="/2018/06/26/Java并发编程-Executor框架几个常见的实现类介绍/" rel="next" title="Java并发编程-Executor框架几个常见的实现类介绍">
+                <i class="fa fa-chevron-left"></i> Java并发编程-Executor框架几个常见的实现类介绍
               </a>
             
           </div>
@@ -518,10 +541,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/04/Java并发编程实战-栅栏CyclicBarrier实现（含代码）/" rel="prev" title="[Java并发编程实战]栅栏CyclicBarrier实现（含代码）">
-                [Java并发编程实战]栅栏CyclicBarrier实现（含代码） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -601,8 +620,17 @@ var jiathis_config={
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -702,6 +730,22 @@ var jiathis_config={
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#任务间隐性耦合的说明"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x4EFB;&#x52A1;&#x95F4;&#x9690;&#x6027;&#x8026;&#x5408;&#x7684;&#x8BF4;&#x660E;" class="headerlink" title="&#x4EFB;&#x52A1;&#x95F4;&#x9690;&#x6027;&#x8026;&#x5408;&#x7684;&#x8BF4;&#x660E;"></a>&#x4EFB;&#x52A1;&#x95F4;&#x9690;&#x6027;&#x8026;&#x5408;&#x7684;&#x8BF4;&#x660E;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程饥饿死锁概念"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x7EBF;&#x7A0B;&#x9965;&#x997F;&#x6B7B;&#x9501;&#x6982;&#x5FF5;" class="headerlink" title="&#x7EBF;&#x7A0B;&#x9965;&#x997F;&#x6B7B;&#x9501;&#x6982;&#x5FF5;"></a>&#x7EBF;&#x7A0B;&#x9965;&#x997F;&#x6B7B;&#x9501;&#x6982;&#x5FF5;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
